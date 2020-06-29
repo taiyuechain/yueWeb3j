@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -19,13 +19,9 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 
-import org.yueweb3j.abi.datatypes.AbiTypes;
 import org.yueweb3j.abi.datatypes.Address;
 import org.yueweb3j.abi.datatypes.Array;
 import org.yueweb3j.abi.datatypes.Bool;
@@ -33,21 +29,17 @@ import org.yueweb3j.abi.datatypes.Bytes;
 import org.yueweb3j.abi.datatypes.BytesType;
 import org.yueweb3j.abi.datatypes.DynamicArray;
 import org.yueweb3j.abi.datatypes.DynamicBytes;
-import org.yueweb3j.abi.datatypes.DynamicStruct;
 import org.yueweb3j.abi.datatypes.Fixed;
 import org.yueweb3j.abi.datatypes.FixedPointType;
 import org.yueweb3j.abi.datatypes.Int;
 import org.yueweb3j.abi.datatypes.IntType;
 import org.yueweb3j.abi.datatypes.NumericType;
 import org.yueweb3j.abi.datatypes.StaticArray;
-import org.yueweb3j.abi.datatypes.StaticStruct;
 import org.yueweb3j.abi.datatypes.Type;
 import org.yueweb3j.abi.datatypes.Ufixed;
 import org.yueweb3j.abi.datatypes.Uint;
 import org.yueweb3j.abi.datatypes.Utf8String;
 import org.yueweb3j.abi.datatypes.generated.Uint160;
-import org.yueweb3j.abi.datatypes.primitive.Double;
-import org.yueweb3j.abi.datatypes.primitive.Float;
 import org.yueweb3j.utils.Numeric;
 
 import static org.yueweb3j.abi.TypeReference.makeTypeReference;
@@ -193,22 +185,22 @@ public class TypeDecoder {
                         ? ((TypeReference.StaticArrayTypeReference) ref).getSize()
                         : -1;
         if (arraySize <= 0) {
-            listcons = DynamicArray.class.getConstructor(Class.class, List.class);
+            listcons = DynamicArray.class.getConstructor(new Class[] {Class.class, List.class});
         } else {
-            Class<?> arrayClass =
+            Class arrayClass =
                     Class.forName("org.web3j.abi.datatypes.generated.StaticArray" + arraySize);
-            listcons = arrayClass.getConstructor(Class.class, List.class);
+            listcons = arrayClass.getConstructor(new Class[] {Class.class, List.class});
         }
         // create a list of arguments coerced to the correct type of sub-TypeReference
-        ArrayList<Type> transformedList = new ArrayList<Type>(values.size());
+        ArrayList transformedList = new ArrayList(values.size());
         TypeReference subTypeReference = ref.getSubTypeReference();
         for (Object o : values) {
             transformedList.add(instantiateType(subTypeReference, o));
         }
-        return (Type) listcons.newInstance(subTypeReference.getClassType(), transformedList);
+        return (Type) listcons.newInstance(ref.getClassType(), transformedList);
     }
 
-    static Type instantiateAtomicType(Class<?> referenceClass, Object value)
+    static Type instantiateAtomicType(Class referenceClass, Object value)
             throws NoSuchMethodException, IllegalAccessException, InvocationTargetException,
                     InstantiationException, ClassNotFoundException {
         Object constructorArg = null;
@@ -247,8 +239,7 @@ public class TypeDecoder {
                             + " of type "
                             + value.getClass());
         }
-        Class<?>[] types = new Class[] {constructorArg.getClass()};
-        Constructor cons = referenceClass.getConstructor(types);
+        Constructor cons = referenceClass.getConstructor(new Class[] {constructorArg.getClass()});
         return (Type) cons.newInstance(constructorArg);
     }
 
@@ -338,102 +329,6 @@ public class TypeDecoder {
         return decodeArrayElements(input, offset, typeReference, length, function);
     }
 
-    public static <T extends Type> T decodeStaticStruct(
-            final String input, final int offset, final TypeReference<T> typeReference) {
-        BiFunction<List<T>, String, T> function =
-                (elements, typeName) -> {
-                    if (elements.isEmpty()) {
-                        throw new UnsupportedOperationException(
-                                "Zero length fixed array is invalid type");
-                    } else {
-                        return instantiateStruct(typeReference, elements);
-                    }
-                };
-
-        return decodeStaticStructElement(input, offset, typeReference, function);
-    }
-
-    private static <T extends Type> T decodeStaticStructElement(
-            final String input,
-            final int offset,
-            final TypeReference<T> typeReference,
-            final BiFunction<List<T>, String, T> consumer) {
-        try {
-            Class<T> classType = typeReference.getClassType();
-            Constructor<?> constructor =
-                    Arrays.stream(classType.getDeclaredConstructors())
-                            .filter(
-                                    declaredConstructor ->
-                                            Arrays.stream(declaredConstructor.getParameterTypes())
-                                                    .allMatch(Type.class::isAssignableFrom))
-                            .findAny()
-                            .orElseThrow(
-                                    () ->
-                                            new RuntimeException(
-                                                    "TypeReferenced struct must contain a constructor with types that extend Type"));
-            final int length = constructor.getParameterCount();
-            List<T> elements = new ArrayList<>(length);
-
-            for (int i = 0, currOffset = 0; i < length; i++) {
-                T value;
-                final Class<T> declaredField = (Class<T>) constructor.getParameterTypes()[i];
-
-                System.out.println(currOffset);
-                if (StaticStruct.class.isAssignableFrom(declaredField)) {
-                    final int nestedStructLength =
-                            classType
-                                            .getDeclaredFields()[i]
-                                            .getType()
-                                            .getConstructors()[0]
-                                            .getParameters()
-                                            .length
-                                    * 64;
-                    value =
-                            decodeStaticStruct(
-                                    input.substring(currOffset, currOffset + nestedStructLength),
-                                    0,
-                                    TypeReference.create(declaredField));
-                    currOffset += nestedStructLength;
-                } else {
-                    value = decode(input.substring(currOffset, currOffset + 64), 0, declaredField);
-                    currOffset += 64;
-                }
-                elements.add(value);
-            }
-
-            String typeName = Utils.getSimpleTypeName(classType);
-
-            return consumer.apply(elements, typeName);
-        } catch (ClassNotFoundException e) {
-            throw new UnsupportedOperationException(
-                    "Unable to access parameterized type " + typeReference.getType().getTypeName(),
-                    e);
-        }
-    }
-
-    private static <T extends Type> T instantiateStruct(
-            final TypeReference<T> typeReference, final List<T> parameters) {
-        try {
-            Constructor ctor =
-                    Arrays.stream(typeReference.getClassType().getDeclaredConstructors())
-                            .filter(
-                                    declaredConstructor ->
-                                            Arrays.stream(declaredConstructor.getParameterTypes())
-                                                    .allMatch(Type.class::isAssignableFrom))
-                            .findAny()
-                            .orElseThrow(
-                                    () ->
-                                            new RuntimeException(
-                                                    "TypeReference struct must contain a constructor with types that extend Type"));
-            ;
-            ctor.setAccessible(true);
-            return (T) ctor.newInstance(parameters.toArray());
-        } catch (ReflectiveOperationException e) {
-            throw new UnsupportedOperationException(
-                    "Constructor cannot accept" + Arrays.toString(parameters.toArray()), e);
-        }
-    }
-
     @SuppressWarnings("unchecked")
     static <T extends Type> T decodeDynamicArray(
             String input, int offset, TypeReference<T> typeReference) {
@@ -441,151 +336,17 @@ public class TypeDecoder {
         int length = decodeUintAsInt(input, offset);
 
         BiFunction<List<T>, String, T> function =
-                (elements, typeName) -> (T) new DynamicArray(AbiTypes.getType(typeName), elements);
+                (elements, typeName) -> {
+                    if (elements.isEmpty()) {
+                        return (T) DynamicArray.empty(typeName);
+                    } else {
+                        return (T) new DynamicArray<>(elements);
+                    }
+                };
 
         int valueOffset = offset + MAX_BYTE_LENGTH_FOR_HEX_STRING;
 
         return decodeArrayElements(input, valueOffset, typeReference, length, function);
-    }
-
-    static <T extends Type> T decodeDynamicStruct(
-            String input, int offset, TypeReference<T> typeReference) {
-
-        BiFunction<List<T>, String, T> function =
-                (elements, typeName) -> {
-                    if (elements.isEmpty()) {
-                        throw new UnsupportedOperationException(
-                                "Zero length fixed array is invalid type");
-                    } else {
-                        return instantiateStruct(typeReference, elements);
-                    }
-                };
-
-        return decodeDynamicStructElements(input, offset, typeReference, function);
-    }
-
-    private static <T extends Type> T decodeDynamicStructElements(
-            final String input,
-            final int offset,
-            final TypeReference<T> typeReference,
-            final BiFunction<List<T>, String, T> consumer) {
-        try {
-            final Class<T> classType = typeReference.getClassType();
-            Constructor<?> constructor =
-                    Arrays.stream(classType.getDeclaredConstructors())
-                            .filter(
-                                    declaredConstructor ->
-                                            Arrays.stream(declaredConstructor.getParameterTypes())
-                                                    .allMatch(Type.class::isAssignableFrom))
-                            .findAny()
-                            .orElseThrow(
-                                    () ->
-                                            new RuntimeException(
-                                                    "TypeReferenced struct must contain a constructor with types that extend Type"));
-            final int length = constructor.getParameterCount();
-            final Map<Integer, T> parameters = new HashMap<>();
-            int staticOffset = 0;
-            final List<Integer> parameterOffsets = new ArrayList<>();
-            for (int i = 0; i < length; ++i) {
-                final Class<T> declaredField = (Class<T>) constructor.getParameterTypes()[i];
-                final T value;
-                final int beginIndex = offset + staticOffset;
-                if (isDynamic(declaredField)) {
-                    final boolean isOnlyParameterInStruct = length == 1;
-                    final int parameterOffset =
-                            isOnlyParameterInStruct
-                                    ? offset
-                                    : decodeDynamicStructDynamicParameterOffset(
-                                            input.substring(beginIndex, beginIndex + 64));
-                    parameterOffsets.add(parameterOffset);
-                    staticOffset += 64;
-                } else {
-                    if (StaticStruct.class.isAssignableFrom(declaredField)) {
-                        value =
-                                decodeStaticStruct(
-                                        input.substring(beginIndex),
-                                        0,
-                                        TypeReference.create(declaredField));
-                    } else {
-                        value = decode(input.substring(beginIndex), 0, declaredField);
-                    }
-                    parameters.put(i, value);
-                    staticOffset += value.bytes32PaddedLength() * 2;
-                }
-            }
-            int dynamicParametersProcessed = 0;
-            int dynamicParametersToProcess =
-                    getDynamicStructDynamicParametersCount(constructor.getParameterTypes());
-            for (int i = 0; i < length; ++i) {
-                final Class<T> declaredField = (Class<T>) constructor.getParameterTypes()[i];
-                if (isDynamic(declaredField)) {
-                    final boolean isLastParameterInStruct =
-                            dynamicParametersProcessed == (dynamicParametersToProcess - 1);
-                    final int parameterLength =
-                            isLastParameterInStruct
-                                    ? input.length()
-                                            - parameterOffsets.get(dynamicParametersProcessed)
-                                    : parameterOffsets.get(dynamicParametersProcessed + 1)
-                                            - parameterOffsets.get(dynamicParametersProcessed);
-                    parameters.put(
-                            i,
-                            decodeDynamicParameterFromStruct(
-                                    input,
-                                    parameterOffsets.get(dynamicParametersProcessed),
-                                    parameterLength,
-                                    declaredField));
-                    dynamicParametersProcessed++;
-                }
-            }
-
-            String typeName = Utils.getSimpleTypeName(classType);
-
-            final List<T> elements = new ArrayList<>();
-            for (int i = 0; i < length; ++i) {
-                elements.add(parameters.get(i));
-            }
-
-            return consumer.apply(elements, typeName);
-        } catch (ClassNotFoundException e) {
-            throw new UnsupportedOperationException(
-                    "Unable to access parameterized type " + typeReference.getType().getTypeName(),
-                    e);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static <T extends Type> int getDynamicStructDynamicParametersCount(
-            final Class<?>[] cls) {
-        return (int) Arrays.stream(cls).filter(c -> isDynamic((Class<T>) c)).count();
-    }
-
-    private static <T extends Type> T decodeDynamicParameterFromStruct(
-            final String input,
-            final int parameterOffset,
-            final int parameterLength,
-            final Class<T> declaredField) {
-        final String dynamicElementData =
-                input.substring(parameterOffset, parameterOffset + parameterLength);
-
-        final T value;
-        if (DynamicStruct.class.isAssignableFrom(declaredField)) {
-            value =
-                    decodeDynamicStruct(
-                            dynamicElementData, 64, TypeReference.create(declaredField));
-        } else {
-            value = decode(dynamicElementData, declaredField);
-        }
-        return value;
-    }
-
-    private static int decodeDynamicStructDynamicParameterOffset(final String input) {
-        return (decodeUintAsInt(input, 0) * 2) + 64;
-    }
-
-    static <T extends Type> boolean isDynamic(Class<T> parameter) {
-        return DynamicBytes.class.isAssignableFrom(parameter)
-                || Utf8String.class.isAssignableFrom(parameter)
-                || DynamicArray.class.isAssignableFrom(parameter);
     }
 
     static BigInteger asBigInteger(Object arg) {
@@ -597,11 +358,6 @@ public class TypeDecoder {
             return Numeric.toBigInt((String) arg);
         } else if (arg instanceof byte[]) {
             return Numeric.toBigInt((byte[]) arg);
-        } else if (arg instanceof Double
-                || arg instanceof Float
-                || arg instanceof java.lang.Double
-                || arg instanceof java.lang.Float) {
-            return BigDecimal.valueOf(((Number) arg).doubleValue()).toBigInteger();
         } else if (arg instanceof Number) {
             return BigInteger.valueOf(((Number) arg).longValue());
         }
@@ -610,7 +366,7 @@ public class TypeDecoder {
 
     static List arrayToList(Object array) {
         int len = java.lang.reflect.Array.getLength(array);
-        ArrayList<Object> rslt = new ArrayList<Object>(len);
+        ArrayList rslt = new ArrayList(len);
         for (int i = 0; i < len; i++) {
             rslt.add(java.lang.reflect.Array.get(array, i));
         }

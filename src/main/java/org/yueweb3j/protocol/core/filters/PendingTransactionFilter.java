@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -30,12 +30,12 @@ public class PendingTransactionFilter extends Filter<String> {
     }
 
     @Override
-    protected YueFilter sendRequest() throws IOException {
+    YueFilter sendRequest() throws IOException {
         return web3j.yueNewPendingTransactionFilter().send();
     }
 
     @Override
-    protected void process(List<YueLog.LogResult> logResults) {
+    void process(List<YueLog.LogResult> logResults) {
         for (YueLog.LogResult logResult : logResults) {
             if (logResult instanceof YueLog.Hash) {
                 String transactionHash = ((YueLog.Hash) logResult).get();

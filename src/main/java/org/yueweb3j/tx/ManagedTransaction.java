@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -26,8 +26,8 @@ import org.yueweb3j.protocol.exceptions.TransactionException;
 public abstract class ManagedTransaction {
 
     /**
-     * @see org.yueweb3j.tx.gas.DefaultGasProvider
      * @deprecated use ContractGasProvider
+     * @see org.yueweb3j.tx.gas.DefaultGasProvider
      */
     public static final BigInteger GAS_PRICE = BigInteger.valueOf(22_000_000_000L);
 
@@ -77,7 +77,7 @@ public abstract class ManagedTransaction {
     }
 
     /**
-     * Return the current gas price from the ethereum node.
+     * Return the current gas price from the yueereum node.
      *
      * <p>Note: this method was previously called {@code getGasPrice} but was renamed to distinguish
      * it when a bean accessor method on {@link Contract} was added with that name. If you have a
@@ -87,7 +87,7 @@ public abstract class ManagedTransaction {
      * behavior.
      *
      * @return the current gas price, determined dynamically at invocation
-     * @throws IOException if there's a problem communicating with the ethereum node
+     * @throws IOException if there's a problem communicating with the yueereum node
      */
     public BigInteger requestCurrentGasPrice() throws IOException {
         YueGasPrice yueGasPrice = web3j.yueGasPrice().send();
@@ -100,19 +100,6 @@ public abstract class ManagedTransaction {
             throws IOException, TransactionException {
 
         return transactionManager.executeTransaction(gasPrice, gasLimit, to, data, value);
-    }
-
-    protected TransactionReceipt sendEIP1559(
-            String to,
-            String data,
-            BigInteger value,
-            BigInteger gasLimit,
-            BigInteger gasPremium,
-            BigInteger feeCap)
-            throws IOException, TransactionException {
-
-        return transactionManager.executeTransactionEIP1559(
-                gasPremium, feeCap, gasLimit, to, data, value);
     }
 
     protected TransactionReceipt send(

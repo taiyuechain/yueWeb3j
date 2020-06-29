@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,9 +17,9 @@ import org.yueweb3j.tx.ChainIdLong;
 /** ENS registry contract addresses. */
 public class Contracts {
 
-    public static final String MAINNET = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e";
-    public static final String ROPSTEN = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e";
-    public static final String RINKEBY = "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e";
+    public static final String MAINNET = "0x314159265dd8dbb310642f98f50c066173c1259b";
+    public static final String ROPSTEN = "0x112234455c3a32fd11230c42e7bccd4a84e02010";
+    public static final String RINKEBY = "0xe7410170f87102df0055eb195163a03b7f2bff4a";
 
     public static String resolveRegistryContract(String chainId) {
         final Long chainIdLong = Long.parseLong(chainId);

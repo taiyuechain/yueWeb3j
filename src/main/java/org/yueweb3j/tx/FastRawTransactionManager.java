@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -27,7 +27,7 @@ public class FastRawTransactionManager extends RawTransactionManager {
 
     private volatile BigInteger nonce = BigInteger.valueOf(-1);
 
-    public FastRawTransactionManager(Web3j web3j, Credentials credentials, long chainId) {
+    public FastRawTransactionManager(Web3j web3j, Credentials credentials, byte chainId) {
         super(web3j, credentials, chainId);
     }
 
@@ -45,7 +45,7 @@ public class FastRawTransactionManager extends RawTransactionManager {
     public FastRawTransactionManager(
             Web3j web3j,
             Credentials credentials,
-            long chainId,
+            byte chainId,
             TransactionReceiptProcessor transactionReceiptProcessor) {
         super(web3j, credentials, chainId, transactionReceiptProcessor);
     }

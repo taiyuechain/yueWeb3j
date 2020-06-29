@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,9 +14,12 @@ package org.yueweb3j.tx.gas;
 
 import java.math.BigInteger;
 
+import org.yueweb3j.tx.Contract;
+import org.yueweb3j.tx.ManagedTransaction;
+
 public class DefaultGasProvider extends StaticGasProvider {
-    public static final BigInteger GAS_LIMIT = BigInteger.valueOf(9_000_000);
-    public static final BigInteger GAS_PRICE = BigInteger.valueOf(4_100_000_000L);
+    public static final BigInteger GAS_LIMIT = Contract.GAS_LIMIT;
+    public static final BigInteger GAS_PRICE = ManagedTransaction.GAS_PRICE;
 
     public DefaultGasProvider() {
         super(GAS_PRICE, GAS_LIMIT);

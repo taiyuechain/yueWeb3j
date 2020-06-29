@@ -23,7 +23,7 @@ import org.yueweb3j.crypto.Credentials;
 import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
 import org.yueweb3j.protocol.core.RemoteCall;
-import org.yueweb3j.protocol.core.methods.request.YueFilter;
+import org.yueweb3j.protocol.core.methods.request.EthFilter;
 import org.yueweb3j.protocol.core.methods.response.Log;
 import org.yueweb3j.protocol.core.methods.response.TransactionReceipt;
 import org.yueweb3j.tuples.generated.Tuple2;
@@ -272,7 +272,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<AddrChangedEventResponse> addrChangedEventFlowable(YueFilter filter) {
+    public Flowable<AddrChangedEventResponse> addrChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, AddrChangedEventResponse>() {
             @Override
             public AddrChangedEventResponse apply(Log log) {
@@ -287,7 +287,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<AddrChangedEventResponse> addrChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(ADDRCHANGED_EVENT));
         return addrChangedEventFlowable(filter);
     }
@@ -305,7 +305,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<ContentChangedEventResponse> contentChangedEventFlowable(YueFilter filter) {
+    public Flowable<ContentChangedEventResponse> contentChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, ContentChangedEventResponse>() {
             @Override
             public ContentChangedEventResponse apply(Log log) {
@@ -320,7 +320,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<ContentChangedEventResponse> contentChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(CONTENTCHANGED_EVENT));
         return contentChangedEventFlowable(filter);
     }
@@ -338,7 +338,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<NameChangedEventResponse> nameChangedEventFlowable(YueFilter filter) {
+    public Flowable<NameChangedEventResponse> nameChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, NameChangedEventResponse>() {
             @Override
             public NameChangedEventResponse apply(Log log) {
@@ -353,7 +353,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<NameChangedEventResponse> nameChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(NAMECHANGED_EVENT));
         return nameChangedEventFlowable(filter);
     }
@@ -371,7 +371,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<ABIChangedEventResponse> aBIChangedEventFlowable(YueFilter filter) {
+    public Flowable<ABIChangedEventResponse> aBIChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, ABIChangedEventResponse>() {
             @Override
             public ABIChangedEventResponse apply(Log log) {
@@ -386,7 +386,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<ABIChangedEventResponse> aBIChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(ABICHANGED_EVENT));
         return aBIChangedEventFlowable(filter);
     }
@@ -405,7 +405,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<PubkeyChangedEventResponse> pubkeyChangedEventFlowable(YueFilter filter) {
+    public Flowable<PubkeyChangedEventResponse> pubkeyChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, PubkeyChangedEventResponse>() {
             @Override
             public PubkeyChangedEventResponse apply(Log log) {
@@ -421,7 +421,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<PubkeyChangedEventResponse> pubkeyChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(PUBKEYCHANGED_EVENT));
         return pubkeyChangedEventFlowable(filter);
     }
@@ -440,7 +440,7 @@ public class PublicResolver extends Contract {
         return responses;
     }
 
-    public Flowable<TextChangedEventResponse> textChangedEventFlowable(YueFilter filter) {
+    public Flowable<TextChangedEventResponse> textChangedEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, TextChangedEventResponse>() {
             @Override
             public TextChangedEventResponse apply(Log log) {
@@ -456,7 +456,7 @@ public class PublicResolver extends Contract {
     }
 
     public Flowable<TextChangedEventResponse> textChangedEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(TEXTCHANGED_EVENT));
         return textChangedEventFlowable(filter);
     }

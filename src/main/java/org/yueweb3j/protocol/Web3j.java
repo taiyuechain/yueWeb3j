@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,13 +14,12 @@ package org.yueweb3j.protocol;
 
 import java.util.concurrent.ScheduledExecutorService;
 
-import org.yueweb3j.protocol.core.Batcher;
 import org.yueweb3j.protocol.core.Ethereum;
 import org.yueweb3j.protocol.core.JsonRpc2_0Web3j;
 import org.yueweb3j.protocol.rx.Web3jRx;
 
 /** JSON-RPC Request object building factory. */
-public interface Web3j extends Ethereum, Web3jRx, Batcher {
+public interface Web3j extends Ethereum, Web3jRx {
 
     /**
      * Construct a new Web3j instance.

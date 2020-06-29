@@ -48,8 +48,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component1' method instead
-	 * @return a value */
+     * @deprecated use 'component1' method instead */
     @Deprecated
     public T1 getValue1() {
         return value1;
@@ -60,8 +59,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component2' method instead
-	 * @return a value */
+     * @deprecated use 'component2' method instead */
     @Deprecated
     public T2 getValue2() {
         return value2;
@@ -72,8 +70,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component3' method instead
-	 * @return a value */
+     * @deprecated use 'component3' method instead */
     @Deprecated
     public T3 getValue3() {
         return value3;
@@ -84,8 +81,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component4' method instead
-	 * @return a value */
+     * @deprecated use 'component4' method instead */
     @Deprecated
     public T4 getValue4() {
         return value4;
@@ -96,8 +92,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component5' method instead
-	 * @return a value */
+     * @deprecated use 'component5' method instead */
     @Deprecated
     public T5 getValue5() {
         return value5;
@@ -108,8 +103,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component6' method instead
-	 * @return a value */
+     * @deprecated use 'component6' method instead */
     @Deprecated
     public T6 getValue6() {
         return value6;
@@ -120,8 +114,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component7' method instead
-	 * @return a value */
+     * @deprecated use 'component7' method instead */
     @Deprecated
     public T7 getValue7() {
         return value7;
@@ -132,8 +125,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component8' method instead
-	 * @return a value */
+     * @deprecated use 'component8' method instead */
     @Deprecated
     public T8 getValue8() {
         return value8;
@@ -144,8 +136,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component9' method instead
-	 * @return a value */
+     * @deprecated use 'component9' method instead */
     @Deprecated
     public T9 getValue9() {
         return value9;
@@ -156,8 +147,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component10' method instead
-	 * @return a value */
+     * @deprecated use 'component10' method instead */
     @Deprecated
     public T10 getValue10() {
         return value10;
@@ -168,8 +158,7 @@ public final class Tuple11<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11> impleme
     }
 
     /**
-     * @deprecated use 'component11' method instead
-	 * @return a value */
+     * @deprecated use 'component11' method instead */
     @Deprecated
     public T11 getValue11() {
         return value11;

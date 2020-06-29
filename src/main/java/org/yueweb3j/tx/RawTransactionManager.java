@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -23,8 +23,6 @@ import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
 import org.yueweb3j.protocol.core.DefaultBlockParameterName;
 import org.yueweb3j.protocol.core.methods.request.Transaction;
-import org.yueweb3j.protocol.core.methods.response.YueCall;
-import org.yueweb3j.protocol.core.methods.response.YueGetCode;
 import org.yueweb3j.protocol.core.methods.response.YueGetTransactionCount;
 import org.yueweb3j.protocol.core.methods.response.YueSendTransaction;
 import org.yueweb3j.tx.exceptions.TxHashMismatchException;
@@ -126,43 +124,13 @@ public class RawTransactionManager extends TransactionManager {
     }
 
     @Override
-    public YueSendTransaction sendTransactionEIP1559(
-            BigInteger gasPremium,
-            BigInteger feeCap,
-            BigInteger gasLimit,
-            String to,
-            String data,
-            BigInteger value,
-            boolean constructor)
-            throws IOException {
-
-        BigInteger nonce = getNonce();
-
-        RawTransaction rawTransaction =
-                RawTransaction.createTransaction(
-                        nonce, null, gasLimit, to, value, data, gasPremium, feeCap);
-
-        return signAndSend(rawTransaction);
-    }
-
-    @Override
     public String sendCall(String to, String data, DefaultBlockParameter defaultBlockParameter)
             throws IOException {
-        YueCall yueCall =
-                web3j.yueCall(
-                                Transaction.createEthCallTransaction(getFromAddress(), to, data),
-                                defaultBlockParameter)
-                        .send();
-
-        assertCallNotReverted(yueCall);
-        return yueCall.getValue();
-    }
-
-    @Override
-    public YueGetCode getCode(
-            final String contractAddress, final DefaultBlockParameter defaultBlockParameter)
-            throws IOException {
-        return web3j.yueGetCode(contractAddress, defaultBlockParameter).send();
+        return web3j.yueCall(
+                        Transaction.createEthCallTransaction(getFromAddress(), to, data),
+                        defaultBlockParameter)
+                .send()
+                .getValue();
     }
 
     /*

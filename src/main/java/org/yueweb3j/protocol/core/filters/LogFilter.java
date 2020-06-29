@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -26,23 +26,23 @@ import org.yueweb3j.protocol.core.methods.response.Log;
 /** Log filter handler. */
 public class LogFilter extends Filter<Log> {
 
-    protected final org.yueweb3j.protocol.core.methods.request.YueFilter yueFilter;
+    private final org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter;
 
     public LogFilter(
             Web3j web3j,
             Callback<Log> callback,
-            org.yueweb3j.protocol.core.methods.request.YueFilter yueFilter) {
+            org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter) {
         super(web3j, callback);
         this.yueFilter = yueFilter;
     }
 
     @Override
-    protected YueFilter sendRequest() throws IOException {
+    YueFilter sendRequest() throws IOException {
         return web3j.yueNewFilter(yueFilter).send();
     }
 
     @Override
-    protected void process(List<YueLog.LogResult> logResults) {
+    void process(List<YueLog.LogResult> logResults) {
         for (YueLog.LogResult logResult : logResults) {
             if (logResult instanceof YueLog.LogObject) {
                 Log log = ((YueLog.LogObject) logResult).get();

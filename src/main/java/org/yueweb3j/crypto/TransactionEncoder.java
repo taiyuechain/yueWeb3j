@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -123,12 +123,6 @@ public class TransactionEncoder {
         // value field will already be hex encoded, so we need to convert into binary first
         byte[] data = Numeric.hexStringToByteArray(rawTransaction.getData());
         result.add(RlpString.create(data));
-
-        // add gas premium and fee cap if this is an EIP-1559 transaction
-        if (rawTransaction.isEIP1559Transaction()) {
-            result.add(RlpString.create(rawTransaction.getGasPremium()));
-            result.add(RlpString.create(rawTransaction.getFeeCap()));
-        }
 
         if (signatureData != null) {
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getV())));

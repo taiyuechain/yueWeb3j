@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,7 +17,7 @@ import java.util.List;
 import io.reactivex.Flowable;
 
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
-import org.yueweb3j.protocol.core.methods.request.YueFilter;
+import org.yueweb3j.protocol.core.methods.request.EthFilter;
 import org.yueweb3j.protocol.core.methods.response.YueBlock;
 import org.yueweb3j.protocol.core.methods.response.Log;
 import org.yueweb3j.protocol.core.methods.response.Transaction;
@@ -33,7 +33,7 @@ public interface Web3jRx {
      * @param yueFilter filter criteria
      * @return a {@link Flowable} instance that emits all Log events matching the filter
      */
-    Flowable<Log> yueLogFlowable(YueFilter yueFilter);
+    Flowable<Log> yueLogFlowable(EthFilter yueFilter);
 
     /**
      * Create an Flowable to emit block hashes.

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -16,7 +16,7 @@ import java.util.List;
 
 import org.yueweb3j.protocol.core.Response;
 
-/** eth_getWork. */
+/** yue_getWork. */
 public class YueGetWork extends Response<List<String>> {
 
     public String getCurrentBlockHeaderPowHash() {

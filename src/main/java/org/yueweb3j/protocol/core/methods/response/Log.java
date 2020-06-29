@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -21,9 +21,9 @@ import org.yueweb3j.utils.Numeric;
  * Log object used by {@link YueLog} and {@link YueGetTransactionReceipt}.
  *
  * <p>It's not clear in the <a
- * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter">docs</a> If only a list of
- * hashes are returned for filters created with eth_newBlockFilter or
- * eth_newPendingTransactionFilter.
+ * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_newfilter">docs</a> If only a list of
+ * hashes are returned for filters created with yue_newBlockFilter or
+ * yue_newPendingTransactionFilter.
  */
 public class Log {
     private boolean removed;

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -107,9 +107,9 @@ public class EnsResolver {
 
     /**
      * Reverse name resolution as documented in the <a
-     * href="https://docs.ens.domains/contract-api-reference/reverseregistrar">specification</a>.
+     * href="https://docs.ens.domains/en/latest/userguide.html#reverse-name-resolution">specification</a>.
      *
-     * @param address an ethereum address, example: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
+     * @param address an yueereum address, example: "0x314159265dd8dbb310642f98f50c066173c1259b"
      * @return a EnsName registered for provided address
      */
     public String reverseResolve(String address) {
@@ -140,13 +140,22 @@ public class EnsResolver {
         String registryContract = Contracts.resolveRegistryContract(netVersion.getNetVersion());
 
         ENS ensRegistry =
-                ENS.load(registryContract, web3j, transactionManager, new DefaultGasProvider());
+                ENS.load(
+                        registryContract,
+                        web3j,
+                        transactionManager,
+                        DefaultGasProvider.GAS_PRICE,
+                        DefaultGasProvider.GAS_LIMIT);
 
         byte[] nameHash = NameHash.nameHashAsBytes(ensName);
         String resolverAddress = ensRegistry.resolver(nameHash).send();
 
         return PublicResolver.load(
-                resolverAddress, web3j, transactionManager, new DefaultGasProvider());
+                resolverAddress,
+                web3j,
+                transactionManager,
+                DefaultGasProvider.GAS_PRICE,
+                DefaultGasProvider.GAS_LIMIT);
     }
 
     boolean isSynced() throws Exception {

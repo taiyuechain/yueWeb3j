@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -20,7 +20,7 @@ import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Filter implementation as per <a
- * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_newfilter">docs</a>
+ * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_newfilter">docs</a>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public abstract class Filter<T extends Filter> {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -22,14 +22,14 @@ import org.yueweb3j.utils.Numeric;
  * Transaction request object used the below methods.
  *
  * <ol>
- *   <li>eth_call
- *   <li>eth_sendTransaction
- *   <li>eth_estimateGas
+ *   <li>yue_call
+ *   <li>yue_sendTransaction
+ *   <li>yue_estimateGas
  * </ol>
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class Transaction {
-    // default as per https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_sendtransaction
+    // default as per https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_sendtransaction
     public static final BigInteger DEFAULT_GAS = BigInteger.valueOf(9000);
 
     private String from;
@@ -38,9 +38,7 @@ public class Transaction {
     private BigInteger gasPrice;
     private BigInteger value;
     private String data;
-    private BigInteger nonce; // nonce field is not present on eth_call/eth_estimateGas
-    private BigInteger gasPremium;
-    private BigInteger feeCap;
+    private BigInteger nonce; // nonce field is not present on yue_call/yue_estimateGas
 
     public Transaction(
             String from,
@@ -50,19 +48,6 @@ public class Transaction {
             String to,
             BigInteger value,
             String data) {
-        this(from, nonce, gasPrice, gasLimit, to, value, data, null, null);
-    }
-
-    public Transaction(
-            String from,
-            BigInteger nonce,
-            BigInteger gasPrice,
-            BigInteger gasLimit,
-            String to,
-            BigInteger value,
-            String data,
-            BigInteger gasPremium,
-            BigInteger feeCap) {
         this.from = from;
         this.to = to;
         this.gas = gasLimit;
@@ -74,8 +59,6 @@ public class Transaction {
         }
 
         this.nonce = nonce;
-        this.gasPremium = gasPremium;
-        this.feeCap = feeCap;
     }
 
     public static Transaction createContractTransaction(

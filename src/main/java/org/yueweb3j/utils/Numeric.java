@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,12 +12,12 @@
  */
 package org.yueweb3j.utils;
 
+import org.yueweb3j.exceptions.MessageDecodingException;
+import org.yueweb3j.exceptions.MessageEncodingException;
+
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
-
-import org.yueweb3j.exceptions.MessageDecodingException;
-import org.yueweb3j.exceptions.MessageEncodingException;
 
 /**
  * Message codec functions.
@@ -39,10 +39,6 @@ public final class Numeric {
     }
 
     public static BigInteger decodeQuantity(String value) {
-        if (isLongValue(value)) {
-            return BigInteger.valueOf(Long.parseLong(value));
-        }
-
         if (!isValidHexQuantity(value)) {
             throw new MessageDecodingException("Value must be in format 0x[1-9]+[0-9]* or 0x0");
         }
@@ -50,15 +46,6 @@ public final class Numeric {
             return new BigInteger(value.substring(2), 16);
         } catch (NumberFormatException e) {
             throw new MessageDecodingException("Negative ", e);
-        }
-    }
-
-    private static boolean isLongValue(String value) {
-        try {
-            Long.parseLong(value);
-            return true;
-        } catch (NumberFormatException e) {
-            return false;
         }
     }
 

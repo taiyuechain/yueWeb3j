@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -18,7 +18,7 @@ import java.util.Map;
 
 import org.yueweb3j.protocol.core.Response;
 
-/** eth_compileSolidity. */
+/** yue_compileSolidity. */
 public class YueCompileSolidity extends Response<Map<String, YueCompileSolidity.Code>> {
 
     public Map<String, Code> getCompiledSolidity() {
@@ -249,7 +249,7 @@ public class YueCompileSolidity extends Response<Map<String, YueCompileSolidity.
 
     public static class Documentation {
         // No documentation available
-        // See https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_compilesolidity
+        // See https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_compilesolidity
         private Map<String, String> methods; // unknown object type
 
         public Documentation() {

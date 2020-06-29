@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -48,12 +48,10 @@ import org.yueweb3j.tx.gas.ContractGasProvider;
 import org.yueweb3j.tx.gas.StaticGasProvider;
 import org.yueweb3j.utils.Numeric;
 
-import static org.yueweb3j.utils.RevertReasonExtractor.extractRevertReason;
-
 /**
  * Solidity contract type abstraction for interacting with smart contracts via native Java types.
  */
-@SuppressWarnings({"WeakerAccess", "deprecation"})
+@SuppressWarnings("WeakerAccess")
 public abstract class Contract extends ManagedTransaction {
 
     // https://www.reddit.com/r/ethereum/comments/5g8ia6/attention_miners_we_recommend_raising_gas_limit/
@@ -223,7 +221,7 @@ public abstract class Contract extends ManagedTransaction {
      * is in fact the contract you believe it is.
      *
      * <p>This method uses the <a
-     * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_getcode">eth_getCode</a> method to
+     * href="https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_getcode">yue_getCode</a> method to
      * get the contract byte code and validates it against the byte code stored in this smart
      * contract wrapper.
      *
@@ -244,7 +242,7 @@ public abstract class Contract extends ManagedTransaction {
         }
 
         YueGetCode yueGetCode =
-                transactionManager.getCode(contractAddress, DefaultBlockParameterName.LATEST);
+                web3j.yueGetCode(contractAddress, DefaultBlockParameterName.LATEST).send();
         if (yueGetCode.hasError()) {
             return false;
         }
@@ -314,9 +312,7 @@ public abstract class Contract extends ManagedTransaction {
         }
 
         Object value = result.getValue();
-        if (returnType.isAssignableFrom(result.getClass())) {
-            return (R) result;
-        } else if (returnType.isAssignableFrom(value.getClass())) {
+        if (returnType.isAssignableFrom(value.getClass())) {
             return (R) value;
         } else if (result.getClass().equals(Address.class) && returnType.equals(String.class)) {
             return (R) result.toString(); // cast isn't necessary
@@ -374,17 +370,11 @@ public abstract class Contract extends ManagedTransaction {
         if (!receipt.isStatusOK()) {
             throw new TransactionException(
                     String.format(
-                            "Transaction %s has failed with status: %s. "
-                                    + "Gas used: %s. "
-                                    + "Revert reason: '%s'.",
-                            receipt.getTransactionHash(),
-                            receipt.getStatus(),
-                            receipt.getGasUsedRaw() != null
-                                    ? receipt.getGasUsed().toString()
-                                    : "unknown",
-                            extractRevertReason(receipt, data, web3j, true)),
-                    receipt);
+                            "Transaction has failed with status: %s. "
+                                    + "Gas used: %d. (not-enough gas?)",
+                            receipt.getStatus(), receipt.getGasUsed()));
         }
+
         return receipt;
     }
 

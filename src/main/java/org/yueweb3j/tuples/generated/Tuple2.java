@@ -21,9 +21,7 @@ public final class Tuple2<T1, T2> implements Tuple {
     }
 
     /**
-     * @deprecated use 'component1' method instead
-     * @return the return value
-     * */
+     * @deprecated use 'component1' method instead */
     @Deprecated
     public T1 getValue1() {
         return value1;
@@ -34,9 +32,7 @@ public final class Tuple2<T1, T2> implements Tuple {
     }
 
     /**
-     * @deprecated use 'component2' method instead
-     * @return the return value
-     * */
+     * @deprecated use 'component2' method instead */
     @Deprecated
     public T2 getValue2() {
         return value2;

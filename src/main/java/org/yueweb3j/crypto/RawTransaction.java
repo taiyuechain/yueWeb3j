@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -29,8 +29,6 @@ public class RawTransaction {
     private String to;
     private BigInteger value;
     private String data;
-    private BigInteger gasPremium;
-    private BigInteger feeCap;
 
     protected RawTransaction(
             BigInteger nonce,
@@ -39,26 +37,12 @@ public class RawTransaction {
             String to,
             BigInteger value,
             String data) {
-        this(nonce, gasPrice, gasLimit, to, value, data, null, null);
-    }
-
-    protected RawTransaction(
-            BigInteger nonce,
-            BigInteger gasPrice,
-            BigInteger gasLimit,
-            String to,
-            BigInteger value,
-            String data,
-            BigInteger gasPremium,
-            BigInteger feeCap) {
         this.nonce = nonce;
         this.gasPrice = gasPrice;
         this.gasLimit = gasLimit;
         this.to = to;
         this.value = value;
         this.data = data != null ? Numeric.cleanHexPrefix(data) : null;
-        this.gasPremium = gasPremium;
-        this.feeCap = feeCap;
     }
 
     public static RawTransaction createContractTransaction(
@@ -81,16 +65,6 @@ public class RawTransaction {
         return new RawTransaction(nonce, gasPrice, gasLimit, to, value, "");
     }
 
-    public static RawTransaction createEtherTransaction(
-            BigInteger nonce,
-            BigInteger gasLimit,
-            String to,
-            BigInteger value,
-            BigInteger gasPremium,
-            BigInteger feeCap) {
-        return new RawTransaction(nonce, null, gasLimit, to, value, "", gasPremium, feeCap);
-    }
-
     public static RawTransaction createTransaction(
             BigInteger nonce, BigInteger gasPrice, BigInteger gasLimit, String to, String data) {
         return createTransaction(nonce, gasPrice, gasLimit, to, BigInteger.ZERO, data);
@@ -105,19 +79,6 @@ public class RawTransaction {
             String data) {
 
         return new RawTransaction(nonce, gasPrice, gasLimit, to, value, data);
-    }
-
-    public static RawTransaction createTransaction(
-            BigInteger nonce,
-            BigInteger gasPrice,
-            BigInteger gasLimit,
-            String to,
-            BigInteger value,
-            String data,
-            BigInteger gasPremium,
-            BigInteger feeCap) {
-
-        return new RawTransaction(nonce, gasPrice, gasLimit, to, value, data, gasPremium, feeCap);
     }
 
     public BigInteger getNonce() {
@@ -142,21 +103,5 @@ public class RawTransaction {
 
     public String getData() {
         return data;
-    }
-
-    public BigInteger getGasPremium() {
-        return gasPremium;
-    }
-
-    public BigInteger getFeeCap() {
-        return feeCap;
-    }
-
-    public boolean isLegacyTransaction() {
-        return gasPrice != null && gasPremium == null && feeCap == null;
-    }
-
-    public boolean isEIP1559Transaction() {
-        return gasPrice == null && gasPremium != null && feeCap != null;
     }
 }

@@ -18,7 +18,7 @@ import org.yueweb3j.crypto.Credentials;
 import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
 import org.yueweb3j.protocol.core.RemoteCall;
-import org.yueweb3j.protocol.core.methods.request.YueFilter;
+import org.yueweb3j.protocol.core.methods.request.EthFilter;
 import org.yueweb3j.protocol.core.methods.response.Log;
 import org.yueweb3j.protocol.core.methods.response.TransactionReceipt;
 import org.yueweb3j.tx.Contract;
@@ -175,7 +175,7 @@ public class ENS extends Contract {
         return responses;
     }
 
-    public Flowable<NewOwnerEventResponse> newOwnerEventFlowable(YueFilter filter) {
+    public Flowable<NewOwnerEventResponse> newOwnerEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, NewOwnerEventResponse>() {
             @Override
             public NewOwnerEventResponse apply(Log log) {
@@ -191,7 +191,7 @@ public class ENS extends Contract {
     }
 
     public Flowable<NewOwnerEventResponse> newOwnerEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(NEWOWNER_EVENT));
         return newOwnerEventFlowable(filter);
     }
@@ -209,7 +209,7 @@ public class ENS extends Contract {
         return responses;
     }
 
-    public Flowable<TransferEventResponse> transferEventFlowable(YueFilter filter) {
+    public Flowable<TransferEventResponse> transferEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, TransferEventResponse>() {
             @Override
             public TransferEventResponse apply(Log log) {
@@ -224,7 +224,7 @@ public class ENS extends Contract {
     }
 
     public Flowable<TransferEventResponse> transferEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(TRANSFER_EVENT));
         return transferEventFlowable(filter);
     }
@@ -242,7 +242,7 @@ public class ENS extends Contract {
         return responses;
     }
 
-    public Flowable<NewResolverEventResponse> newResolverEventFlowable(YueFilter filter) {
+    public Flowable<NewResolverEventResponse> newResolverEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, NewResolverEventResponse>() {
             @Override
             public NewResolverEventResponse apply(Log log) {
@@ -257,7 +257,7 @@ public class ENS extends Contract {
     }
 
     public Flowable<NewResolverEventResponse> newResolverEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(NEWRESOLVER_EVENT));
         return newResolverEventFlowable(filter);
     }
@@ -275,7 +275,7 @@ public class ENS extends Contract {
         return responses;
     }
 
-    public Flowable<NewTTLEventResponse> newTTLEventFlowable(YueFilter filter) {
+    public Flowable<NewTTLEventResponse> newTTLEventFlowable(EthFilter filter) {
         return web3j.yueLogFlowable(filter).map(new io.reactivex.functions.Function<Log, NewTTLEventResponse>() {
             @Override
             public NewTTLEventResponse apply(Log log) {
@@ -290,7 +290,7 @@ public class ENS extends Contract {
     }
 
     public Flowable<NewTTLEventResponse> newTTLEventFlowable(DefaultBlockParameter startBlock, DefaultBlockParameter endBlock) {
-        YueFilter filter = new YueFilter(startBlock, endBlock, getContractAddress());
+        EthFilter filter = new EthFilter(startBlock, endBlock, getContractAddress());
         filter.addSingleTopic(EventEncoder.encode(NEWTTL_EVENT));
         return newTTLEventFlowable(filter);
     }

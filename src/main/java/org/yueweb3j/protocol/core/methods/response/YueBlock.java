@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -33,13 +33,13 @@ import org.yueweb3j.utils.Numeric;
  * Block object returned by:
  *
  * <ul>
- *   <li>eth_getBlockByHash
- *   <li>eth_getBlockByNumber
- *   <li>eth_getUncleByBlockHashAndIndex
- *   <li>eth_getUncleByBlockNumberAndIndex
+ *   <li>yue_getBlockByHash
+ *   <li>yue_getBlockByNumber
+ *   <li>yue_getUncleByBlockHashAndIndex
+ *   <li>yue_getUncleByBlockNumberAndIndex
  * </ul>
  *
- * <p>See <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyhash">docs</a>
+ * <p>See <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_gettransactionbyhash">docs</a>
  * for further details.
  *
  * <p>See the following <a href="https://github.com/ethcore/parity/issues/2401">issue</a> for

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -151,7 +151,7 @@ public class HttpService extends Service {
     @Override
     protected InputStream performIO(String request) throws IOException {
 
-        RequestBody requestBody = RequestBody.create(request, JSON_MEDIA_TYPE);
+        RequestBody requestBody = RequestBody.create(JSON_MEDIA_TYPE, request);
         Headers headers = buildHeaders();
 
         okhttp3.Request httpRequest =
@@ -221,10 +221,6 @@ public class HttpService extends Service {
 
     public HashMap<String, String> getHeaders() {
         return headers;
-    }
-
-    public String getUrl() {
-        return url;
     }
 
     @Override

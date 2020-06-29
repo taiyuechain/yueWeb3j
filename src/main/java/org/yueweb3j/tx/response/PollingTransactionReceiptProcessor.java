@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -42,8 +42,8 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
             String transactionHash, long sleepDuration, int attempts)
             throws IOException, TransactionException {
 
-        Optional<? extends TransactionReceipt> receiptOptional =
-                sendTransactionReceiptRequest(transactionHash);
+        Optional<TransactionReceipt> receiptOptional =
+                (Optional<TransactionReceipt>) sendTransactionReceiptRequest(transactionHash);
         for (int i = 0; i < attempts; i++) {
             if (!receiptOptional.isPresent()) {
                 try {
@@ -51,8 +51,9 @@ public class PollingTransactionReceiptProcessor extends TransactionReceiptProces
                 } catch (InterruptedException e) {
                     throw new TransactionException(e);
                 }
-
-                receiptOptional = sendTransactionReceiptRequest(transactionHash);
+                receiptOptional =
+                        (Optional<TransactionReceipt>)
+                                sendTransactionReceiptRequest(transactionHash);
             } else {
                 return receiptOptional.get();
             }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -37,12 +37,12 @@ public abstract class Filter<T> {
 
     private static final Logger log = LoggerFactory.getLogger(Filter.class);
 
-    protected final Web3j web3j;
-    protected Callback<T> callback;
+    final Web3j web3j;
+    final Callback<T> callback;
 
     private volatile BigInteger filterId;
 
-    protected ScheduledFuture<?> schedule;
+    private ScheduledFuture<?> schedule;
 
     private ScheduledExecutorService scheduledExecutorService;
 
@@ -114,7 +114,6 @@ public abstract class Filter<T> {
                 yueLog = new YueLog();
                 yueLog.setResult(Collections.emptyList());
             }
-
             process(yueLog.getLogs());
 
         } catch (IOException e) {
@@ -144,9 +143,9 @@ public abstract class Filter<T> {
         }
     }
 
-    protected abstract YueFilter sendRequest() throws IOException;
+    abstract YueFilter sendRequest() throws IOException;
 
-    protected abstract void process(List<YueLog.LogResult> logResults);
+    abstract void process(List<YueLog.LogResult> logResults);
 
     private void reinstallFilter() {
         log.warn("The filter has not been found. Filter id: " + filterId);
@@ -158,7 +157,7 @@ public abstract class Filter<T> {
         schedule.cancel(false);
 
         try {
-            YueUninstallFilter yueUninstallFilter = uninstallFilter(filterId);
+            YueUninstallFilter yueUninstallFilter = web3j.yueUninstallFilter(filterId).send();
             if (yueUninstallFilter.hasError()) {
                 throwException(yueUninstallFilter.getError());
             }
@@ -169,10 +168,6 @@ public abstract class Filter<T> {
         } catch (IOException e) {
             throwException(e);
         }
-    }
-
-    protected YueUninstallFilter uninstallFilter(BigInteger filterId) throws IOException {
-        return web3j.yueUninstallFilter(filterId).send();
     }
 
     /**

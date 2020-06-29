@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -17,12 +17,9 @@ import java.math.BigInteger;
 
 import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
-import org.yueweb3j.protocol.core.methods.response.YueCall;
-import org.yueweb3j.protocol.core.methods.response.YueGetCode;
 import org.yueweb3j.protocol.core.methods.response.YueSendTransaction;
 import org.yueweb3j.protocol.core.methods.response.TransactionReceipt;
 import org.yueweb3j.protocol.exceptions.TransactionException;
-import org.yueweb3j.tx.exceptions.ContractCallException;
 import org.yueweb3j.tx.response.PollingTransactionReceiptProcessor;
 import org.yueweb3j.tx.response.TransactionReceiptProcessor;
 
@@ -36,8 +33,6 @@ public abstract class TransactionManager {
 
     public static final int DEFAULT_POLLING_ATTEMPTS_PER_TX_HASH = 40;
     public static final long DEFAULT_POLLING_FREQUENCY = DEFAULT_BLOCK_TIME;
-    public static final String REVERT_ERR_STR =
-            "Contract Call has been reverted by the EVM with the reason: '%s'.";
 
     private final TransactionReceiptProcessor transactionReceiptProcessor;
     private final String fromAddress;
@@ -81,48 +76,10 @@ public abstract class TransactionManager {
         return processResponse(yueSendTransaction);
     }
 
-    protected TransactionReceipt executeTransactionEIP1559(
-            BigInteger gasPremium,
-            BigInteger feeCap,
-            BigInteger gasLimit,
-            String to,
-            String data,
-            BigInteger value)
-            throws IOException, TransactionException {
-
-        return executeTransactionEIP1559(gasPremium, feeCap, gasLimit, to, data, value, false);
-    }
-
-    protected TransactionReceipt executeTransactionEIP1559(
-            BigInteger gasPremium,
-            BigInteger feeCap,
-            BigInteger gasLimit,
-            String to,
-            String data,
-            BigInteger value,
-            boolean constructor)
-            throws IOException, TransactionException {
-
-        YueSendTransaction yueSendTransaction =
-                sendTransactionEIP1559(gasPremium, feeCap, gasLimit, to, data, value, constructor);
-        return processResponse(yueSendTransaction);
-    }
-
     public YueSendTransaction sendTransaction(
             BigInteger gasPrice, BigInteger gasLimit, String to, String data, BigInteger value)
             throws IOException {
         return sendTransaction(gasPrice, gasLimit, to, data, value, false);
-    }
-
-    public YueSendTransaction sendTransactionEIP1559(
-            BigInteger gasPremium,
-            BigInteger feeCap,
-            BigInteger gasLimit,
-            String to,
-            String data,
-            BigInteger value)
-            throws IOException {
-        return sendTransactionEIP1559(gasPremium, feeCap, gasLimit, to, data, value, false);
     }
 
     public abstract YueSendTransaction sendTransaction(
@@ -134,21 +91,8 @@ public abstract class TransactionManager {
             boolean constructor)
             throws IOException;
 
-    public abstract YueSendTransaction sendTransactionEIP1559(
-            BigInteger gasPremium,
-            BigInteger feeCap,
-            BigInteger gasLimit,
-            String to,
-            String data,
-            BigInteger value,
-            boolean constructor)
-            throws IOException;
-
     public abstract String sendCall(
             String to, String data, DefaultBlockParameter defaultBlockParameter) throws IOException;
-
-    public abstract YueGetCode getCode(
-            String contractAddress, DefaultBlockParameter defaultBlockParameter) throws IOException;
 
     public String getFromAddress() {
         return fromAddress;
@@ -165,12 +109,5 @@ public abstract class TransactionManager {
         String transactionHash = transactionResponse.getTransactionHash();
 
         return transactionReceiptProcessor.waitForTransactionReceipt(transactionHash);
-    }
-
-    static void assertCallNotReverted(YueCall yueCall) {
-        if (yueCall.isReverted()) {
-            throw new ContractCallException(
-                    String.format(REVERT_ERR_STR, yueCall.getRevertReason()));
-        }
     }
 }

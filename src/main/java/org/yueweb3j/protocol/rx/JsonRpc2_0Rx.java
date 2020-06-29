@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -28,11 +28,9 @@ import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.core.DefaultBlockParameter;
 import org.yueweb3j.protocol.core.DefaultBlockParameterName;
 import org.yueweb3j.protocol.core.DefaultBlockParameterNumber;
-import org.yueweb3j.protocol.core.Request;
 import org.yueweb3j.protocol.core.filters.BlockFilter;
 import org.yueweb3j.protocol.core.filters.LogFilter;
 import org.yueweb3j.protocol.core.filters.PendingTransactionFilter;
-import org.yueweb3j.protocol.core.methods.request.YueFilter;
 import org.yueweb3j.protocol.core.methods.response.YueBlock;
 import org.yueweb3j.protocol.core.methods.response.Log;
 import org.yueweb3j.protocol.core.methods.response.Transaction;
@@ -72,7 +70,7 @@ public class JsonRpc2_0Rx {
     }
 
     public Flowable<Log> yueLogFlowable(
-            YueFilter yueFilter, long pollingInterval) {
+            org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter, long pollingInterval) {
         return Flowable.create(
                 subscriber -> {
                     LogFilter logFilter = new LogFilter(web3j, subscriber::onNext, yueFilter);
@@ -140,21 +138,35 @@ public class JsonRpc2_0Rx {
     private Flowable<YueBlock> replayBlocksFlowableSync(
             DefaultBlockParameter startBlock,
             DefaultBlockParameter endBlock,
-            boolean containsFullTransactionObjects,
-            boolean isAscending) {
-        BigInteger startBlockNumber;
-        BigInteger endBlockNumber;
+            boolean fullTransactionObjects,
+            boolean ascending) {
+
+        BigInteger startBlockNumber = null;
+        BigInteger endBlockNumber = null;
         try {
             startBlockNumber = getBlockNumber(startBlock);
             endBlockNumber = getBlockNumber(endBlock);
         } catch (IOException e) {
-            return Flowable.error(e);
+            Flowable.error(e);
         }
 
-        return Flowables.range(startBlockNumber, endBlockNumber, isAscending)
-                .map(DefaultBlockParameterNumber::new)
-                .map(number -> web3j.yueGetBlockByNumber(number, containsFullTransactionObjects))
-                .flatMap(Request::flowable);
+        if (ascending) {
+            return Flowables.range(startBlockNumber, endBlockNumber)
+                    .flatMap(
+                            i ->
+                                    web3j.yueGetBlockByNumber(
+                                                    new DefaultBlockParameterNumber(i),
+                                                    fullTransactionObjects)
+                                            .flowable());
+        } else {
+            return Flowables.range(startBlockNumber, endBlockNumber, false)
+                    .flatMap(
+                            i ->
+                                    web3j.yueGetBlockByNumber(
+                                                    new DefaultBlockParameterNumber(i),
+                                                    fullTransactionObjects)
+                                            .flowable());
+        }
     }
 
     public Flowable<Transaction> replayTransactionsFlowable(

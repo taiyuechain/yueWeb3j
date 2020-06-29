@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -29,8 +29,6 @@ import org.yueweb3j.protocol.core.methods.request.ShhFilter;
 import org.yueweb3j.protocol.core.methods.request.ShhPost;
 import org.yueweb3j.protocol.core.methods.request.Transaction;
 import org.yueweb3j.protocol.core.methods.response.*;
-import org.yueweb3j.protocol.core.methods.response.admin.AdminNodeInfo;
-import org.yueweb3j.protocol.core.methods.response.admin.AdminPeers;
 import org.yueweb3j.protocol.rx.JsonRpc2_0Rx;
 import org.yueweb3j.protocol.websocket.events.LogNotification;
 import org.yueweb3j.protocol.websocket.events.NewHeadsNotification;
@@ -94,30 +92,12 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Request<?, AdminNodeInfo> adminNodeInfo() {
-        return new Request<>(
-                "admin_nodeInfo", Collections.emptyList(), web3jService, AdminNodeInfo.class);
-    }
-
-    @Override
-    public Request<?, AdminPeers> adminPeers() {
-        return new Request<>(
-                "admin_peers", Collections.emptyList(), web3jService, AdminPeers.class);
-    }
-
-    @Override
     public Request<?, YueProtocolVersion> yueProtocolVersion() {
         return new Request<>(
                 "yue_protocolVersion",
                 Collections.<String>emptyList(),
                 web3jService,
                 YueProtocolVersion.class);
-    }
-
-    @Override
-    public Request<?, YueChainId> yueChainId() {
-        return new Request<>(
-                "yue_chainId", Collections.<String>emptyList(), web3jService, YueChainId.class);
     }
 
     @Override
@@ -406,7 +386,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Request<?, YueFilter> yueNewFilter(
-            org.yueweb3j.protocol.core.methods.request.YueFilter yueFilter) {
+            org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter) {
         return new Request<>(
                 "yue_newFilter", Arrays.asList(yueFilter), web3jService, YueFilter.class);
     }
@@ -458,7 +438,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Request<?, YueLog> yueGetLogs(
-            org.yueweb3j.protocol.core.methods.request.YueFilter yueFilter) {
+            org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter) {
         return new Request<>("yue_getLogs", Arrays.asList(yueFilter), web3jService, YueLog.class);
     }
 
@@ -603,6 +583,24 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
+    public Request<?, YueCommittee> getCommitteeByNumber(BigInteger committeeNumber) {
+        return new Request<>(
+                "yue_getCommittee",
+                Arrays.asList(DefaultBlockParameter.valueOf(committeeNumber).getValue()),
+                web3jService,
+                YueCommittee.class);
+    }
+
+    @Override
+    public Request<?, YueCommitteeNumber> getCurrentCommitteeNumber() {
+        return new Request<>(
+                "yue_committeeNumber",
+                Arrays.asList(),
+                web3jService,
+                YueCommitteeNumber.class);
+    }
+
+    @Override
     public Flowable<NewHeadsNotification> newHeadsNotifications() {
         return web3jService.subscribe(
                 new Request<>(
@@ -653,7 +651,7 @@ public class JsonRpc2_0Web3j implements Web3j {
 
     @Override
     public Flowable<Log> yueLogFlowable(
-            org.yueweb3j.protocol.core.methods.request.YueFilter yueFilter) {
+            org.yueweb3j.protocol.core.methods.request.EthFilter yueFilter) {
         return web3jRx.yueLogFlowable(yueFilter, blockTime);
     }
 
@@ -740,10 +738,5 @@ public class JsonRpc2_0Web3j implements Web3j {
         } catch (IOException e) {
             throw new RuntimeException("Failed to close web3j service", e);
         }
-    }
-
-    @Override
-    public BatchRequest newBatch() {
-        return new BatchRequest(web3jService);
     }
 }

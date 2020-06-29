@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -28,14 +28,14 @@ import org.yueweb3j.protocol.core.Response;
  * Transaction object returned by:
  *
  * <ul>
- *   <li>eth_getTransactionByHash
- *   <li>eth_getTransactionByBlockHashAndIndex
- *   <li>eth_getTransactionByBlockNumberAndIndex
+ *   <li>yue_getTransactionByHash
+ *   <li>yue_getTransactionByBlockHashAndIndex
+ *   <li>yue_getTransactionByBlockNumberAndIndex
  * </ul>
  *
  * <p>This differs slightly from the request {@link YueSendTransaction} Transaction object.
  *
- * <p>See <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#eth_gettransactionbyhash">docs</a>
+ * <p>See <a href="https://github.com/ethereum/wiki/wiki/JSON-RPC#yue_gettransactionbyhash">docs</a>
  * for further details.
  */
 public class YueTransaction extends Response<Transaction> {

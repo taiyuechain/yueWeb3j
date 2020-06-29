@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -111,11 +111,6 @@ public abstract class TypeReference<T extends org.yueweb3j.abi.datatypes.Type>
     /**
      * This is a helper method that only works for atomic types (uint, bytes, etc). Array types must
      * be wrapped by a {@link ParameterizedType}.
-     *
-     * @param solidityType the solidity as a string eg Address Int
-     * @param primitives is it a primitive type
-     * @return returns
-     * @throws ClassNotFoundException when the class cannot be found.
      */
     protected static Class<? extends org.yueweb3j.abi.datatypes.Type> getAtomicTypeClass(
             String solidityType, boolean primitives) throws ClassNotFoundException {

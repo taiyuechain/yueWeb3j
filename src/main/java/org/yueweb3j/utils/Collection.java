@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -14,8 +14,6 @@ package org.yueweb3j.utils;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /** Utility functions for working with Collections. */
 public class Collection {
@@ -38,6 +36,28 @@ public class Collection {
     }
 
     public static <T> String join(List<T> list, String separator, Function<T, String> function) {
-        return list.stream().map(function).map(String::trim).collect(Collectors.joining(separator));
+        String result = "";
+        for (int i = 0; i < list.size(); i++) {
+            result += function.apply(list.get(i)).trim();
+            if (i + 1 < list.size()) {
+                result += separator;
+            }
+        }
+        return result;
+    }
+
+    public static String join(List<String> list, String separator) {
+        String result = "";
+        for (int i = 0; i < list.size(); i++) {
+            result += list.get(i).trim();
+            if (i + 1 < list.size()) {
+                result += separator;
+            }
+        }
+        return result;
+    }
+
+    public interface Function<R, S> {
+        S apply(R r);
     }
 }

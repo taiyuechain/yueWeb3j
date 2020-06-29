@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -22,7 +22,7 @@ import org.yueweb3j.abi.datatypes.Type;
 import org.yueweb3j.abi.datatypes.Utf8String;
 import org.yueweb3j.protocol.core.Response;
 
-/** eth_call. */
+/** yue_call. */
 public class YueCall extends Response<String> {
 
     // Numeric.toHexString(Hash.sha3("Error(string)".getBytes())).substring(0, 10)
@@ -37,27 +37,16 @@ public class YueCall extends Response<String> {
         return getResult();
     }
 
-    public boolean isReverted() {
-        return hasError() || isErrorInResult();
-    }
-
-    @Deprecated
     public boolean reverts() {
-        return isReverted();
-    }
-
-    private boolean isErrorInResult() {
         return getValue() != null && getValue().startsWith(errorMethodId);
     }
 
     public String getRevertReason() {
-        if (isErrorInResult()) {
+        if (reverts()) {
             String hexRevertReason = getValue().substring(errorMethodId.length());
             List<Type> decoded = FunctionReturnDecoder.decode(hexRevertReason, revertReasonType);
             Utf8String decodedRevertReason = (Utf8String) decoded.get(0);
             return decodedRevertReason.getValue();
-        } else if (hasError()) {
-            return getError().getMessage();
         }
         return null;
     }

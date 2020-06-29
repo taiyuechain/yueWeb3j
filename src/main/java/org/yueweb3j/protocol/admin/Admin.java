@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -20,7 +20,6 @@ import org.yueweb3j.protocol.Web3jService;
 import org.yueweb3j.protocol.admin.methods.response.NewAccountIdentifier;
 import org.yueweb3j.protocol.admin.methods.response.PersonalListAccounts;
 import org.yueweb3j.protocol.admin.methods.response.PersonalUnlockAccount;
-import org.yueweb3j.protocol.admin.methods.response.TxPoolContent;
 import org.yueweb3j.protocol.core.Request;
 import org.yueweb3j.protocol.core.methods.request.Transaction;
 import org.yueweb3j.protocol.core.methods.response.YueSendTransaction;
@@ -51,6 +50,4 @@ public interface Admin extends Web3j {
 
     public Request<?, YueSendTransaction> personalSendTransaction(
             Transaction transaction, String password);
-
-    public Request<?, TxPoolContent> txPoolContent();
 }

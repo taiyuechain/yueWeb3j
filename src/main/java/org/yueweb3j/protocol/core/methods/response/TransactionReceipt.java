@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -34,7 +34,6 @@ public class TransactionReceipt {
     private String to;
     private List<Log> logs;
     private String logsBloom;
-    private String revertReason;
 
     public TransactionReceipt() {}
 
@@ -51,8 +50,7 @@ public class TransactionReceipt {
             String from,
             String to,
             List<Log> logs,
-            String logsBloom,
-            String revertReason) {
+            String logsBloom) {
         this.transactionHash = transactionHash;
         this.transactionIndex = transactionIndex;
         this.blockHash = blockHash;
@@ -66,7 +64,6 @@ public class TransactionReceipt {
         this.to = to;
         this.logs = logs;
         this.logsBloom = logsBloom;
-        this.revertReason = revertReason;
     }
 
     public String getTransactionHash() {
@@ -158,10 +155,10 @@ public class TransactionReceipt {
     }
 
     public boolean isStatusOK() {
-        if (null == getStatus()) {
+        if (null == status) {
             return true;
         }
-        BigInteger statusQuantity = Numeric.decodeQuantity(getStatus());
+        BigInteger statusQuantity = Numeric.decodeQuantity(status);
         return BigInteger.ONE.equals(statusQuantity);
     }
 
@@ -195,14 +192,6 @@ public class TransactionReceipt {
 
     public void setLogsBloom(String logsBloom) {
         this.logsBloom = logsBloom;
-    }
-
-    public String getRevertReason() {
-        return revertReason;
-    }
-
-    public void setRevertReason(String revertReason) {
-        this.revertReason = revertReason;
     }
 
     @Override
@@ -266,14 +255,9 @@ public class TransactionReceipt {
         if (getLogs() != null ? !getLogs().equals(that.getLogs()) : that.getLogs() != null) {
             return false;
         }
-        if (getLogsBloom() != null
-                ? !getLogsBloom().equals(that.getLogsBloom())
-                : that.getLogsBloom() != null) {
-            return false;
-        }
-        return getRevertReason() != null
-                ? getRevertReason().equals(that.getRevertReason())
-                : that.getRevertReason() == null;
+        return getLogsBloom() != null
+                ? getLogsBloom().equals(that.getLogsBloom())
+                : that.getLogsBloom() == null;
     }
 
     @Override
@@ -291,7 +275,6 @@ public class TransactionReceipt {
         result = 31 * result + (getTo() != null ? getTo().hashCode() : 0);
         result = 31 * result + (getLogs() != null ? getLogs().hashCode() : 0);
         result = 31 * result + (getLogsBloom() != null ? getLogsBloom().hashCode() : 0);
-        result = 31 * result + (getRevertReason() != null ? getRevertReason().hashCode() : 0);
         return result;
     }
 
@@ -335,9 +318,6 @@ public class TransactionReceipt {
                 + logs
                 + ", logsBloom='"
                 + logsBloom
-                + '\''
-                + ", revertReason='"
-                + revertReason
                 + '\''
                 + '}';
     }
