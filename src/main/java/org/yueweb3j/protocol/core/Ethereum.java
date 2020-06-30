@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 Web3 Labs Ltd.
+ * Copyright 2019 Web3 Labs LTD.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with
  * the License. You may obtain a copy of the License at
@@ -12,12 +12,10 @@
  */
 package org.yueweb3j.protocol.core;
 
-import java.math.BigInteger;
-
 import org.yueweb3j.protocol.core.methods.request.ShhFilter;
 import org.yueweb3j.protocol.core.methods.response.*;
-import org.yueweb3j.protocol.core.methods.response.admin.AdminNodeInfo;
-import org.yueweb3j.protocol.core.methods.response.admin.AdminPeers;
+
+import java.math.BigInteger;
 
 /** Core Ethereum JSON-RPC API. */
 public interface Ethereum {
@@ -31,13 +29,7 @@ public interface Ethereum {
 
     Request<?, NetPeerCount> netPeerCount();
 
-    Request<?, AdminNodeInfo> adminNodeInfo();
-
-    Request<?, AdminPeers> adminPeers();
-
     Request<?, YueProtocolVersion> yueProtocolVersion();
-
-    Request<?, YueChainId> yueChainId();
 
     Request<?, YueCoinbase> yueCoinbase();
 
@@ -147,7 +139,7 @@ public interface Ethereum {
 
     Request<?, DbGetHex> dbGetHex(String databaseName, String keyName);
 
-    Request<?, org.yueweb3j.protocol.core.methods.response.ShhPost> shhPost(
+    Request<?, ShhPost> shhPost(
             org.yueweb3j.protocol.core.methods.request.ShhPost shhPost);
 
     Request<?, ShhVersion> shhVersion();
@@ -167,4 +159,8 @@ public interface Ethereum {
     Request<?, ShhMessages> shhGetFilterChanges(BigInteger filterId);
 
     Request<?, ShhMessages> shhGetMessages(BigInteger filterId);
+
+    Request<?, YueCommittee> getCommitteeByNumber(BigInteger committeeNumber);
+
+    Request<?, YueCommitteeNumber> getCurrentCommitteeNumber();
 }
