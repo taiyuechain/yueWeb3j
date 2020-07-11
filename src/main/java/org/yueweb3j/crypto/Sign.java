@@ -12,10 +12,8 @@
  */
 package org.yueweb3j.crypto;
 
-import java.math.BigInteger;
-import java.security.SignatureException;
-import java.util.Arrays;
-
+import org.bouncycastle.asn1.ASN1Integer;
+import org.bouncycastle.asn1.ASN1Sequence;
 import org.bouncycastle.asn1.x9.X9ECParameters;
 import org.bouncycastle.asn1.x9.X9IntegerConverter;
 import org.bouncycastle.crypto.ec.CustomNamedCurves;
@@ -23,9 +21,15 @@ import org.bouncycastle.crypto.params.ECDomainParameters;
 import org.bouncycastle.math.ec.ECAlgorithms;
 import org.bouncycastle.math.ec.ECPoint;
 import org.bouncycastle.math.ec.FixedPointCombMultiplier;
+import org.bouncycastle.math.ec.custom.gm.SM2P256V1Curve;
 import org.bouncycastle.math.ec.custom.sec.SecP256K1Curve;
-
+import org.yueweb3j.config.Constant;
+import org.yueweb3j.crypto.sm.GmUtil;
 import org.yueweb3j.utils.Numeric;
+
+import java.math.BigInteger;
+import java.security.SignatureException;
+import java.util.Arrays;
 
 import static org.yueweb3j.utils.Assertions.verifyPrecondition;
 
@@ -38,16 +42,27 @@ import static org.yueweb3j.utils.Assertions.verifyPrecondition;
  */
 public class Sign {
 
-    public static final X9ECParameters CURVE_PARAMS = CustomNamedCurves.getByName("secp256k1");
-    static final ECDomainParameters CURVE =
+    public static void init() {
+        CURVE_PARAMS = CustomNamedCurves.getByName(Constant.EncryptionMode == 0 ? "secp256k1" : "sm2p256v1");
+        CURVE = new ECDomainParameters(
+                CURVE_PARAMS.getCurve(),
+                CURVE_PARAMS.getG(),
+                CURVE_PARAMS.getN(),
+                CURVE_PARAMS.getH());
+        HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
+    }
+
+    public static X9ECParameters CURVE_PARAMS
+            = CustomNamedCurves.getByName(Constant.EncryptionMode == 0 ? "secp256k1" : "sm2p256v1");
+    static ECDomainParameters CURVE =
             new ECDomainParameters(
                     CURVE_PARAMS.getCurve(),
                     CURVE_PARAMS.getG(),
                     CURVE_PARAMS.getN(),
                     CURVE_PARAMS.getH());
-    static final BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
+    static BigInteger HALF_CURVE_ORDER = CURVE_PARAMS.getN().shiftRight(1);
 
-    static final String MESSAGE_PREFIX = "\u0019Ethereum Signed Message:\n";
+    static String MESSAGE_PREFIX = "\u0019Ethereum Signed Message:\n";
 
     static byte[] getEthereumMessagePrefix(int messageLength) {
         return MESSAGE_PREFIX.concat(String.valueOf(messageLength)).getBytes();
@@ -68,7 +83,11 @@ public class Sign {
     }
 
     public static SignatureData signMessage(byte[] message, ECKeyPair keyPair) {
-        return signMessage(message, keyPair, true);
+        if(Constant.EncryptionMode == 0) {
+            return signMessage(message, keyPair, true);
+        }else {
+            return signMessageSm(message, keyPair, true);
+        }
     }
 
     public static SignatureData signMessage(byte[] message, ECKeyPair keyPair, boolean needToHash) {
@@ -98,12 +117,106 @@ public class Sign {
         int headerByte = recId + 27;
 
         // 1 header + 32 bytes for R + 32 bytes for S
-        byte[] v = new byte[] {(byte) headerByte};
+        byte[] v = new byte[]{(byte) headerByte};
         byte[] r = Numeric.toBytesPadded(sig.r, 32);
         byte[] s = Numeric.toBytesPadded(sig.s, 32);
 
         return new SignatureData(v, r, s);
     }
+
+
+    public static byte[] byteMerger(byte[] bt1, byte[] bt2) {
+        byte[] bt3 = new byte[bt1.length + bt2.length];
+        System.arraycopy(bt1, 0, bt3, 0, bt1.length);
+        System.arraycopy(bt2, 0, bt3, bt1.length, bt2.length);
+        return bt3;
+    }
+
+
+    public static SignatureData signMessageSm(byte[] message, ECKeyPair keyPair, boolean needToHash) {
+        BigInteger publicKey = keyPair.getPublicKey();
+        byte[] messageHash;
+        if (needToHash) {
+            messageHash = GmUtil.sm3(message);
+        } else {
+            messageHash = message;
+        }
+
+
+        byte[] sigRS = GmUtil.signSm3WithSm2Asn1Rs(messageHash, GmUtil.defaultUserId,
+                GmUtil.getPrivatekeyFromD(keyPair.getPrivateKey()));
+
+        ASN1Sequence seq = ASN1Sequence.getInstance(sigRS);
+
+        byte[] r = GmUtil.bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
+        byte[] s = GmUtil.bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
+        byte[] v = new byte[]{(byte) 1};
+
+        return new SignatureData(v, r, s,keyPair.getCompressPublicKey());
+    }
+
+
+//
+//    public static SignatureData signMessageSm(byte[] message, ECKeyPair keyPair, boolean needToHash) {
+//        BigInteger publicKey = keyPair.getPublicKey();
+//        byte[] messageHash;
+//        if (needToHash) {
+//            messageHash = GmUtil.sm3(message);
+//        } else {
+//            messageHash = message;
+//        }
+//
+//
+//        byte[] sigRS = GmUtil.signSm3WithSm2Asn1Rs(messageHash, GmUtil.defaultUserId,
+//                GmUtil.getPrivatekeyFromD(keyPair.getPrivateKey()));
+//
+//        ASN1Sequence seq = ASN1Sequence.getInstance(sigRS);
+//
+//        byte[] r = ASN1Integer.getInstance(seq.getObjectAt(0)).getValue().toByteArray();
+//        byte[] s = ASN1Integer.getInstance(seq.getObjectAt(1)).getValue().toByteArray();
+//        byte[] sign = byteMerger(r, s);
+//
+//        int rMark = 1;
+//        int sMark = 1;
+//        int signLen = 32;
+//
+//        if (r.length < signLen) {
+//            for (int i = 0; i < signLen - r.length; i++) {
+//                sign = byteMerger(sign, new byte[]{(byte) r.length});
+//                rMark = rMark *3;
+//            }
+//            if (s.length <signLen){
+//                for(int i = 0;i<signLen - s.length;i++){
+//                    sign = byteMerger(sign, new byte[]{(byte) s.length});
+//                    sMark = sMark *7;
+//                    rMark = rMark + sMark;
+//                }
+//            }
+//        }
+//
+//        if (r.length == signLen && s.length <signLen){
+//            for(int i = 0;i<signLen - s.length;i++){
+//                sign = byteMerger(sign, new byte[]{(byte) s.length});
+//                sMark = sMark *7;
+//            }
+//        }
+//
+//
+//
+//        byte[] v =  new byte[]{(byte) rMark};
+//        sign = byteMerger(sign,v);
+//
+//
+////        return null;
+//
+//
+////        // 1 header + 32 bytes for R + 32 bytes for S
+////        byte[] v = new byte[]{(byte) headerByte};
+////        byte[] r = Numeric.toBytesPadded(sig.r, 32);
+////        byte[] s = Numeric.toBytesPadded(sig.s, 32);
+//
+//        return new SignatureData(v, r, s);
+//    }
 
     /**
      * Given the components of a signature and a selector value, recover and return the public key
@@ -121,8 +234,8 @@ public class Sign {
      * 3, and if the output is null OR a key that is not the one you expect, you try again with the
      * next recId.
      *
-     * @param recId Which possible key to recover.
-     * @param sig the R and S components of the signature, wrapped.
+     * @param recId   Which possible key to recover.
+     * @param sig     the R and S components of the signature, wrapped.
      * @param message Hash of the data that was signed.
      * @return An ECKey containing only the public part, or null if recovery wasn't possible.
      */
@@ -144,7 +257,7 @@ public class Sign {
         //        routine outputs "invalid", then do another iteration of Step 1.
         //
         // More concisely, what these points mean is to use X as a compressed public key.
-        BigInteger prime = SecP256K1Curve.q;
+        BigInteger prime = Constant.EncryptionMode == 0 ? SecP256K1Curve.q : SM2P256V1Curve.q;
         if (x.compareTo(prime) >= 0) {
             // Cannot have point co-ordinates larger than this as everything takes place modulo Q.
             return null;
@@ -184,7 +297,9 @@ public class Sign {
         return new BigInteger(1, Arrays.copyOfRange(qBytes, 1, qBytes.length));
     }
 
-    /** Decompress a compressed public key (x co-ord and low-bit of y-coord). */
+    /**
+     * Decompress a compressed public key (x co-ord and low-bit of y-coord).
+     */
     private static ECPoint decompressKey(BigInteger xBN, boolean yBit) {
         X9IntegerConverter x9 = new X9IntegerConverter();
         byte[] compEnc = x9.integerToBytes(xBN, 1 + x9.getByteLength(CURVE.getCurve()));
@@ -193,15 +308,15 @@ public class Sign {
     }
 
     /**
-     * Given an arbitrary piece of text and an Ethereum message signature encoded in bytes, returns
+     * Given an arbitrary piece of text and an YueInterface message signature encoded in bytes, returns
      * the public key that was used to sign it. This can then be compared to the expected public key
      * to determine if the signature was correct.
      *
-     * @param message RLP encoded message.
+     * @param message       RLP encoded message.
      * @param signatureData The message signature components
      * @return the public key used to sign the message
      * @throws SignatureException If the public key could not be recovered or if there was a
-     *     signature format error.
+     *                            signature format error.
      */
     public static BigInteger signedMessageToKey(byte[] message, SignatureData signatureData)
             throws SignatureException {
@@ -209,15 +324,15 @@ public class Sign {
     }
 
     /**
-     * Given an arbitrary message and an Ethereum message signature encoded in bytes, returns the
+     * Given an arbitrary message and an YueInterface message signature encoded in bytes, returns the
      * public key that was used to sign it. This can then be compared to the expected public key to
      * determine if the signature was correct.
      *
-     * @param message The message.
+     * @param message       The message.
      * @param signatureData The message signature components
      * @return the public key used to sign the message
      * @throws SignatureException If the public key could not be recovered or if there was a
-     *     signature format error.
+     *                            signature format error.
      */
     public static BigInteger signedPrefixedMessageToKey(byte[] message, SignatureData signatureData)
             throws SignatureException {
@@ -225,15 +340,15 @@ public class Sign {
     }
 
     /**
-     * Given an arbitrary message hash and an Ethereum message signature encoded in bytes, returns
+     * Given an arbitrary message hash and an YueInterface message signature encoded in bytes, returns
      * the public key that was used to sign it. This can then be compared to the expected public key
      * to determine if the signature was correct.
      *
-     * @param messageHash The message hash.
+     * @param messageHash   The message hash.
      * @param signatureData The message signature components
      * @return the public key used to sign the message
      * @throws SignatureException If the public key could not be recovered or if there was a
-     *     signature format error.
+     *                            signature format error.
      */
     public static BigInteger signedMessageHashToKey(byte[] messageHash, SignatureData signatureData)
             throws SignatureException {
@@ -307,16 +422,23 @@ public class Sign {
         private final byte[] v;
         private final byte[] r;
         private final byte[] s;
+        private final byte[] p;
 
         public SignatureData(byte v, byte[] r, byte[] s) {
-            this(new byte[] {v}, r, s);
+            this(new byte[]{v}, r, s,null);
         }
 
         public SignatureData(byte[] v, byte[] r, byte[] s) {
+            this(v, r, s,null);
+        }
+
+        public SignatureData(byte[] v, byte[] r, byte[] s, byte[] p) {
             this.v = v;
             this.r = r;
             this.s = s;
+            this.p = p;
         }
+
 
         public byte[] getV() {
             return v;
@@ -328,6 +450,10 @@ public class Sign {
 
         public byte[] getS() {
             return s;
+        }
+
+        public byte[] getP(){
+            return p;
         }
 
         @Override

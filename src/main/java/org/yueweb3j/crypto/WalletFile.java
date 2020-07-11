@@ -24,7 +24,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-/** Ethereum wallet file. */
+/** YueInterface wallet file. */
 public class WalletFile {
     private String address;
     private Crypto crypto;

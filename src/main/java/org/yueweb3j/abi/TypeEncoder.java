@@ -38,7 +38,7 @@ import static org.yueweb3j.abi.datatypes.Type.MAX_BIT_LENGTH;
 import static org.yueweb3j.abi.datatypes.Type.MAX_BYTE_LENGTH;
 
 /**
- * Ethereum Contract Application Binary Interface (ABI) encoding for types. Further details are
+ * YueInterface Contract Application Binary Interface (ABI) encoding for types. Further details are
  * available <a href="https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI">here</a>.
  */
 public class TypeEncoder {

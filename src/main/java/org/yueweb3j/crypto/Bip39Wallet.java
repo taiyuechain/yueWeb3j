@@ -12,7 +12,7 @@
  */
 package org.yueweb3j.crypto;
 
-/** Data class encapsulating a BIP-39 compatible Ethereum wallet. */
+/** Data class encapsulating a BIP-39 compatible YueInterface wallet. */
 public class Bip39Wallet {
 
     /** Path to wallet file. */

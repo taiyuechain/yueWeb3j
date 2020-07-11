@@ -14,7 +14,7 @@ package org.yueweb3j.tx;
 
 public class ChainIdLong {
     public static final long NONE = -1;
-    public static final long MAINNET = 1;
+    public static final long MAINNET = 20515;
     public static final long EXPANSE_MAINNET = 2;
     public static final long ROPSTEN = 3;
     public static final long RINKEBY = 4;

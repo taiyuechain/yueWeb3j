@@ -33,7 +33,7 @@ import org.yueweb3j.utils.Numeric;
 import org.yueweb3j.utils.TxHashVerifier;
 
 /**
- * TransactionManager implementation using Ethereum wallet file to create and sign transactions
+ * TransactionManager implementation using YueInterface wallet file to create and sign transactions
  * locally.
  *
  * <p>This transaction manager provides support for specifying the chain id for transactions as per

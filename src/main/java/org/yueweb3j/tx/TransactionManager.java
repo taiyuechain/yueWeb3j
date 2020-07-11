@@ -29,7 +29,7 @@ import org.yueweb3j.tx.response.TransactionReceiptProcessor;
 import static org.yueweb3j.protocol.core.JsonRpc2_0Web3j.DEFAULT_BLOCK_TIME;
 
 /**
- * Transaction manager abstraction for executing transactions with Ethereum client via various
+ * Transaction manager abstraction for executing transactions with YueInterface client via various
  * mechanisms.
  */
 public abstract class TransactionManager {

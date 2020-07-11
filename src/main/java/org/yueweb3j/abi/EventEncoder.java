@@ -21,7 +21,7 @@ import org.yueweb3j.crypto.Hash;
 import org.yueweb3j.utils.Numeric;
 
 /**
- * Ethereum filter encoding. Further limited details are available <a
+ * YueInterface filter encoding. Further limited details are available <a
  * href="https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI#events">here</a>.
  */
 public class EventEncoder {

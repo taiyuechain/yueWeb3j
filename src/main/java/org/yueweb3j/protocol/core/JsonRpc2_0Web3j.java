@@ -596,6 +596,60 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
+    public Request<?, YuePermissionMembers> getListPermission(String groupAddress, int type) {
+        return new Request<>(
+                "cpm_listBasePermission",
+                Arrays.asList(groupAddress, type),
+                web3jService,
+                YuePermissionMembers.class);
+    }
+
+    @Override
+    public Request<?, YueMemberAddress> showWhiteList() {
+        return new Request<>(
+                "cpm_showWhiteList",
+                Collections.<String>emptyList(),
+                web3jService,
+                YueMemberAddress.class);
+    }
+
+    @Override
+    public Request<?, YueMemberAddress> showBlackList() {
+        return new Request<>(
+                "cpm_showBlackList",
+                Collections.<String>emptyList(),
+                web3jService,
+                YueMemberAddress.class);
+    }
+
+    @Override
+    public Request<?, YueMemberAddress> showMyGroup() {
+        return new Request<>(
+                "cpm_showMyGroup",
+                Collections.<String>emptyList(),
+                web3jService,
+                YueMemberAddress.class);
+    }
+
+    @Override
+    public Request<?, YuePermissionGroup> showGroup(String address) {
+        return new Request<>(
+                "cpm_showGroup",
+                Collections.singletonList(address),
+                web3jService,
+                YuePermissionGroup.class);
+    }
+
+    @Override
+    public Request<?, YueBasePermission> getListBasePermission(String address) {
+        return new Request<>(
+                "cpm_listBasePermission",
+                Collections.singletonList(address),
+                web3jService,
+                YueBasePermission.class);
+    }
+
+    @Override
     public Flowable<NewHeadsNotification> newHeadsNotifications() {
         return web3jService.subscribe(
                 new Request<>(

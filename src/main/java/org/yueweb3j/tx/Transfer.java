@@ -26,7 +26,7 @@ import org.yueweb3j.protocol.exceptions.TransactionException;
 import org.yueweb3j.utils.Convert;
 import org.yueweb3j.utils.Numeric;
 
-/** Class for performing Ether transactions on the Ethereum blockchain. */
+/** Class for performing Ether transactions on the YueInterface blockchain. */
 public class Transfer extends ManagedTransaction {
 
     // This is the cost to send Ether between parties

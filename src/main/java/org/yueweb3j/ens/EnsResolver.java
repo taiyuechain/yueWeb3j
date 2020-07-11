@@ -92,7 +92,7 @@ public class EnsResolver {
             try {
                 contractAddress = resolver.addr(nameHash).send();
             } catch (Exception e) {
-                throw new RuntimeException("Unable to execute Ethereum request", e);
+                throw new RuntimeException("Unable to execute YueInterface request", e);
             }
 
             if (!WalletUtils.isValidAddress(contractAddress)) {
@@ -122,7 +122,7 @@ public class EnsResolver {
             try {
                 name = resolver.name(nameHash).send();
             } catch (Exception e) {
-                throw new RuntimeException("Unable to execute Ethereum request", e);
+                throw new RuntimeException("Unable to execute YueInterface request", e);
             }
 
             if (!isValidEnsName(name, addressLength)) {

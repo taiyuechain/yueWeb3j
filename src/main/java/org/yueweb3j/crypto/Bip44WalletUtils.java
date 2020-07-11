@@ -20,11 +20,11 @@ import static org.yueweb3j.crypto.Bip32ECKeyPair.HARDENED_BIT;
 public class Bip44WalletUtils extends WalletUtils {
 
     /**
-     * Generates a BIP-44 compatible Ethereum wallet on top of BIP-39 generated seed.
+     * Generates a BIP-44 compatible YueInterface wallet on top of BIP-39 generated seed.
      *
      * @param password Will be used for both wallet encryption and passphrase for BIP-39 seed
      * @param destinationDirectory The directory containing the wallet
-     * @return A BIP-39 compatible Ethereum wallet
+     * @return A BIP-39 compatible YueInterface wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
      */
@@ -34,12 +34,12 @@ public class Bip44WalletUtils extends WalletUtils {
     }
 
     /**
-     * Generates a BIP-44 compatible Ethereum wallet on top of BIP-39 generated seed.
+     * Generates a BIP-44 compatible YueInterface wallet on top of BIP-39 generated seed.
      *
      * @param password Will be used for both wallet encryption and passphrase for BIP-39 seed
      * @param destinationDirectory The directory containing the wallet
      * @param testNet should use the testNet derive path
-     * @return A BIP-39 compatible Ethereum wallet
+     * @return A BIP-39 compatible YueInterface wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
      */

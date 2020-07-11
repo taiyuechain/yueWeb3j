@@ -12,20 +12,22 @@
  */
 package org.yueweb3j.crypto;
 
-import java.math.BigInteger;
-import java.security.KeyPair;
-import java.util.Arrays;
-
 import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.crypto.params.ECPrivateKeyParameters;
 import org.bouncycastle.crypto.signers.ECDSASigner;
 import org.bouncycastle.crypto.signers.HMacDSAKCalculator;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPrivateKey;
 import org.bouncycastle.jcajce.provider.asymmetric.ec.BCECPublicKey;
-
+import org.yueweb3j.crypto.sm.GmUtil;
 import org.yueweb3j.utils.Numeric;
 
-/** Elliptic Curve SECP-256k1 generated key pair. */
+import java.math.BigInteger;
+import java.security.KeyPair;
+import java.util.Arrays;
+
+/**
+ * Elliptic Curve SECP-256k1 generated key pair.
+ */
 public class ECKeyPair {
     private final BigInteger privateKey;
     private final BigInteger publicKey;
@@ -41,6 +43,14 @@ public class ECKeyPair {
 
     public BigInteger getPublicKey() {
         return publicKey;
+    }
+
+
+    public byte[] getCompressPublicKey() {
+        String pubKeyYPrefix = publicKey.testBit(0) ? "03" : "02";
+        String pubKeyHex = publicKey.toString(16);
+        String pubKeyX = pubKeyHex.substring(0, 64);
+        return Numeric.hexStringToByteArray(pubKeyYPrefix + pubKeyX);
     }
 
     /**
@@ -65,7 +75,7 @@ public class ECKeyPair {
 
         BigInteger privateKeyValue = privateKey.getD();
 
-        // Ethereum does not use encoded public keys like bitcoin - see
+        // YueInterface does not use encoded public keys like bitcoin - see
         // https://en.bitcoin.it/wiki/Elliptic_Curve_Digital_Signature_Algorithm for details
         // Additionally, as the first bit is a constant prefix (0x04) we ignore this value
         byte[] publicKeyBytes = publicKey.getQ().getEncoded(false);

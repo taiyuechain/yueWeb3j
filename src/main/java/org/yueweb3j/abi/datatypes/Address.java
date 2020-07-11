@@ -17,7 +17,7 @@ import java.math.BigInteger;
 import org.yueweb3j.utils.Numeric;
 
 /**
- * Address type, which by default is equivalent to uint160 which follows the Ethereum specification.
+ * Address type, which by default is equivalent to uint160 which follows the YueInterface specification.
  */
 public class Address implements Type<String> {
 

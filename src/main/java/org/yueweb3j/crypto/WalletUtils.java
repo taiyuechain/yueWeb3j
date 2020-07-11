@@ -92,7 +92,7 @@ public class WalletUtils {
     }
 
     /**
-     * Generates a BIP-39 compatible Ethereum wallet. The private key for the wallet can be
+     * Generates a BIP-39 compatible YueInterface wallet. The private key for the wallet can be
      * calculated using following algorithm:
      *
      * <pre>
@@ -101,7 +101,7 @@ public class WalletUtils {
      *
      * @param password Will be used for both wallet encryption and passphrase for BIP-39 seed
      * @param destinationDirectory The directory containing the wallet
-     * @return A BIP-39 compatible Ethereum wallet
+     * @return A BIP-39 compatible YueInterface wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
      */
@@ -120,12 +120,12 @@ public class WalletUtils {
     }
 
     /**
-     * Generates a BIP-39 compatible Ethereum wallet using a mnemonic passed as argument.
+     * Generates a BIP-39 compatible YueInterface wallet using a mnemonic passed as argument.
      *
      * @param password Will be used for both wallet encryption and passphrase for BIP-39 seed
      * @param mnemonic The mnemonic that will be used to generate the seed
      * @param destinationDirectory The directory containing the wallet
-     * @return A BIP-39 compatible Ethereum wallet
+     * @return A BIP-39 compatible YueInterface wallet
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if the destination cannot be written to
      */
@@ -161,7 +161,7 @@ public class WalletUtils {
      *
      * @param password - password to decrypt JSON wallet string
      * @param content - JSON wallet content string
-     * @return Ethereum credentials
+     * @return YueInterface credentials
      * @throws CipherException if the underlying cipher is not available
      * @throws IOException if a low-level I/O problem (unexpected end-of-input, network error)
      *     occurs

@@ -14,7 +14,7 @@ package org.yueweb3j.utils;
 
 import java.math.BigDecimal;
 
-/** Ethereum unit conversion functions. */
+/** YueInterface unit conversion functions. */
 public final class Convert {
     private Convert() {}
 

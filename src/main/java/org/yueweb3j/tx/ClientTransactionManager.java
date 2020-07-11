@@ -24,7 +24,7 @@ import org.yueweb3j.protocol.core.methods.response.YueSendTransaction;
 import org.yueweb3j.tx.response.TransactionReceiptProcessor;
 
 /**
- * TransactionManager implementation for using an Ethereum node to transact.
+ * TransactionManager implementation for using an YueInterface node to transact.
  *
  * <p><b>Note</b>: accounts must be unlocked on the node for transactions to be successful.
  */

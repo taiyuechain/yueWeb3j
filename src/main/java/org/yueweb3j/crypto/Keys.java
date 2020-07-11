@@ -25,6 +25,8 @@ import java.util.Arrays;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import org.yueweb3j.config.Constant;
+import org.yueweb3j.crypto.sm.GmUtil;
 import org.yueweb3j.utils.Numeric;
 import org.yueweb3j.utils.Strings;
 
@@ -106,12 +108,23 @@ public class Keys {
                     Strings.zeros(PUBLIC_KEY_LENGTH_IN_HEX - publicKeyNoPrefix.length())
                             + publicKeyNoPrefix;
         }
-        String hash = Hash.sha3(publicKeyNoPrefix);
+        String hash ;
+        if (Constant.EncryptionMode == 0) {
+            hash = Hash.sha3(publicKeyNoPrefix);
+        }else {
+            hash = GmUtil.sm3(publicKeyNoPrefix);
+        }
+
         return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX); // right most 160 bits
     }
 
     public static byte[] getAddress(byte[] publicKey) {
-        byte[] hash = Hash.sha3(publicKey);
+        byte[] hash;// right most 160 bits
+        if (Constant.EncryptionMode == 0) {
+            hash = Hash.sha3(publicKey);
+        }else {
+            hash = GmUtil.sm3(publicKey);
+        }
         return Arrays.copyOfRange(hash, hash.length - 20, hash.length); // right most 160 bits
     }
 

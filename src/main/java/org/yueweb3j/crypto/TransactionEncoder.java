@@ -12,17 +12,17 @@
  */
 package org.yueweb3j.crypto;
 
-import java.math.BigInteger;
-import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.yueweb3j.rlp.RlpEncoder;
 import org.yueweb3j.rlp.RlpList;
 import org.yueweb3j.rlp.RlpString;
 import org.yueweb3j.rlp.RlpType;
 import org.yueweb3j.utils.Bytes;
 import org.yueweb3j.utils.Numeric;
+
+import java.math.BigInteger;
+import java.nio.ByteBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Create RLP encoded transaction, implementation as per p4 of the <a
@@ -79,7 +79,7 @@ public class TransactionEncoder {
 
     public static byte[] encode(RawTransaction rawTransaction, long chainId) {
         Sign.SignatureData signatureData =
-                new Sign.SignatureData(longToBytes(chainId), new byte[] {}, new byte[] {});
+                new Sign.SignatureData(longToBytes(chainId), new byte[]{}, new byte[]{});
         return encode(rawTransaction, signatureData);
     }
 
@@ -131,6 +131,11 @@ public class TransactionEncoder {
         }
 
         if (signatureData != null) {
+            if (signatureData.getP() != null && signatureData.getP().length > 0) {
+                result.add(RlpString.create(signatureData.getP()));
+            } else {
+                result.add(RlpString.create(""));
+            }
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getV())));
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getR())));
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getS())));

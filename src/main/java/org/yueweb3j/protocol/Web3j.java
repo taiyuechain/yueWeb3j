@@ -12,33 +12,50 @@
  */
 package org.yueweb3j.protocol;
 
-import java.util.concurrent.ScheduledExecutorService;
-
+import org.yueweb3j.config.Constant;
+import org.yueweb3j.crypto.Sign;
 import org.yueweb3j.protocol.core.Batcher;
-import org.yueweb3j.protocol.core.Ethereum;
+import org.yueweb3j.protocol.core.YueInterface;
 import org.yueweb3j.protocol.core.JsonRpc2_0Web3j;
 import org.yueweb3j.protocol.rx.Web3jRx;
 
-/** JSON-RPC Request object building factory. */
-public interface Web3j extends Ethereum, Web3jRx, Batcher {
+import java.util.concurrent.ScheduledExecutorService;
 
+/**
+ * JSON-RPC Request object building factory.
+ */
+public interface Web3j extends YueInterface, Web3jRx, Batcher {
     /**
      * Construct a new Web3j instance.
      *
      * @param web3jService web3j service instance - i.e. HTTP or IPC
+     * @param encryptionMode 0 : "secp256k1"  1: "sm2p256v1"
      * @return new Web3j instance
+     *
      */
-    static Web3j build(Web3jService web3jService) {
+    static Web3j build(Web3jService web3jService, int encryptionMode) {
+        Constant.EncryptionMode = encryptionMode;
+        Sign.init();
         return new JsonRpc2_0Web3j(web3jService);
     }
 
     /**
+     * Construct a new Web3j instance; for sm2p256v1;
+     * @param web3jService web3jService web3j service instance - i.e. HTTP or IPC
+     * @return new  sm2p256v1 Web3j instance
+     */
+    static Web3j build(Web3jService web3jService) {
+        return build(web3jService,1);
+    }
+
+
+    /**
      * Construct a new Web3j instance.
      *
-     * @param web3jService web3j service instance - i.e. HTTP or IPC
-     * @param pollingInterval polling interval for responses from network nodes
+     * @param web3jService             web3j service instance - i.e. HTTP or IPC
+     * @param pollingInterval          polling interval for responses from network nodes
      * @param scheduledExecutorService executor service to use for scheduled tasks. <strong>You are
-     *     responsible for terminating this thread pool</strong>
+     *                                 responsible for terminating this thread pool</strong>
      * @return new Web3j instance
      */
     static Web3j build(
@@ -48,6 +65,8 @@ public interface Web3j extends Ethereum, Web3jRx, Batcher {
         return new JsonRpc2_0Web3j(web3jService, pollingInterval, scheduledExecutorService);
     }
 
-    /** Shutdowns a Web3j instance and closes opened resources. */
+    /**
+     * Shutdowns a Web3j instance and closes opened resources.
+     */
     void shutdown();
 }

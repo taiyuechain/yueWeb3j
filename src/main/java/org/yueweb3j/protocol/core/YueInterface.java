@@ -17,8 +17,8 @@ import org.yueweb3j.protocol.core.methods.response.*;
 
 import java.math.BigInteger;
 
-/** Core Ethereum JSON-RPC API. */
-public interface Ethereum {
+/** Core YueInterface JSON-RPC API. */
+public interface YueInterface {
     Request<?, Web3ClientVersion> web3ClientVersion();
 
     Request<?, Web3Sha3> web3Sha3(String data);
@@ -163,4 +163,17 @@ public interface Ethereum {
     Request<?, YueCommittee> getCommitteeByNumber(BigInteger committeeNumber);
 
     Request<?, YueCommitteeNumber> getCurrentCommitteeNumber();
+
+    Request<?, YuePermissionMembers> getListPermission(String groupAddress,int type);
+
+    Request<?, YueMemberAddress> showWhiteList();
+
+    Request<?, YueMemberAddress> showBlackList();
+
+    Request<?, YueMemberAddress> showMyGroup();
+
+    Request<?, YuePermissionGroup> showGroup(String address);
+
+    Request<?, YueBasePermission> getListBasePermission(String address);
+
 }
