@@ -5,7 +5,7 @@ public class Constant {
     /**
      * 加密模式 0 原有 1 国密
      */
-    public static int EncryptionMode = 0;
+    public static int EncryptionMode = 1;
 
     /**
      * 系统证书合约地址

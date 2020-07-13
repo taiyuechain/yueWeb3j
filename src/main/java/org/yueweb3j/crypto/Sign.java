@@ -42,7 +42,8 @@ import static org.yueweb3j.utils.Assertions.verifyPrecondition;
  */
 public class Sign {
 
-    public static void init() {
+    public static void init(int encryptionMode) {
+        Constant.EncryptionMode = encryptionMode;
         CURVE_PARAMS = CustomNamedCurves.getByName(Constant.EncryptionMode == 0 ? "secp256k1" : "sm2p256v1");
         CURVE = new ECDomainParameters(
                 CURVE_PARAMS.getCurve(),

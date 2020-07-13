@@ -6,7 +6,7 @@
 
     <groupId>com.taiyuechain</groupId>
     <artifactId>yueWeb3j</artifactId>
-    <version>1.1.0.2</version>
+    <version>1.1.1.0</version>
     <packaging>jar</packaging>
 
     <parent>
@@ -115,7 +115,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.12</version>
-            <scope>test</scope>
+            <scope>crypto.test</scope>
         </dependency>
 
     </dependencies>

@@ -29,25 +29,12 @@ public interface Web3j extends YueInterface, Web3jRx, Batcher {
      * Construct a new Web3j instance.
      *
      * @param web3jService web3j service instance - i.e. HTTP or IPC
-     * @param encryptionMode 0 : "secp256k1"  1: "sm2p256v1"
      * @return new Web3j instance
      *
      */
-    static Web3j build(Web3jService web3jService, int encryptionMode) {
-        Constant.EncryptionMode = encryptionMode;
-        Sign.init();
+    static Web3j build(Web3jService web3jService) {
         return new JsonRpc2_0Web3j(web3jService);
     }
-
-    /**
-     * Construct a new Web3j instance; for sm2p256v1;
-     * @param web3jService web3jService web3j service instance - i.e. HTTP or IPC
-     * @return new  sm2p256v1 Web3j instance
-     */
-    static Web3j build(Web3jService web3jService) {
-        return build(web3jService,1);
-    }
-
 
     /**
      * Construct a new Web3j instance.

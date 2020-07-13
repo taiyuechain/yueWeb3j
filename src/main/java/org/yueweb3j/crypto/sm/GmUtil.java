@@ -22,12 +22,8 @@ import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.util.encoders.Hex;
+import org.yueweb3j.YueWeb3j;
 import org.yueweb3j.crypto.Credentials;
-import org.yueweb3j.crypto.Hash;
-import org.yueweb3j.crypto.Sign;
-import org.yueweb3j.crypto.sm.interfaces.Sm2PrivateKey;
-import org.yueweb3j.crypto.sm.interfaces.impl.Sm2PrivateKeyImpl;
-import org.yueweb3j.crypto.sm.util.Sm2Util;
 import org.yueweb3j.utils.Numeric;
 
 import javax.crypto.Cipher;
@@ -69,6 +65,7 @@ public class GmUtil {
             Security.addProvider(new org.bouncycastle.jce.provider.BouncyCastleProvider());
         }
     }
+
     public static byte[] defaultUserId = "1234567812345678".getBytes();
 
     /**
@@ -286,9 +283,9 @@ public class GmUtil {
         return result;
     }
 
-    public static String sm3(String hash){
+    public static String sm3(String hash) {
         Security.addProvider(new BouncyCastleProvider());
-        byte[] dataByte = hash.getBytes();
+        byte[] dataByte = Numeric.hexStringToByteArray(hash);
         SM3Digest sm3Digest = new SM3Digest();
         sm3Digest.update(dataByte, 0, dataByte.length);
         byte[] result = new byte[sm3Digest.getDigestSize()];
@@ -388,7 +385,7 @@ public class GmUtil {
 
 
     public static String byteArrayToHexStr(byte[] byteArray) {
-        if (byteArray == null){
+        if (byteArray == null) {
             return null;
         }
         char[] hexArray = "0123456789ABCDEF".toCharArray();
@@ -402,12 +399,12 @@ public class GmUtil {
     }
 
 
-
     public static byte[] toByteArray(String hexString) {
         hexString = hexString.toLowerCase();
         final byte[] byteArray = new byte[hexString.length() / 2];
         int k = 0;
-        for (int i = 0; i < byteArray.length; i++) {// 因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
+        // 因为是16进制，最多只会占用4位，转换成字节需要两个16进制的字符，高位在先
+        for (int i = 0; i < byteArray.length; i++) {
             byte high = (byte) (Character.digit(hexString.charAt(k), 16) & 0xff);
             byte low = (byte) (Character.digit(hexString.charAt(k + 1), 16) & 0xff);
             byteArray[i] = (byte) (high << 4 | low);
@@ -415,12 +412,6 @@ public class GmUtil {
         }
         return byteArray;
     }
-
-
-
-
-
-
 
 
     public static void main(String[] args) throws Exception {
@@ -436,26 +427,33 @@ public class GmUtil {
         BCECPrivateKey privateKey = getPrivatekeyFromD(Numeric.toBigInt("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75"));
 
 
-
+        YueWeb3j.init(0);
         Credentials credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
+        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
+        System.out.println(credentials.getAddress());
+
+        YueWeb3j.init(1);
+        credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
+        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
+        System.out.println(credentials.getAddress());
 
 
         byte[] signabc = signSm3WithSm2Asn1Rs(enByte, userID, privateKey);
         System.out.println(Numeric.toHexStringNoPrefix(rsAsn1ToPlainByteArray(signabc)));
 
-        byte [] sig = rsAsn1ToPlainByteArray(signabc);
+        byte[] sig = rsAsn1ToPlainByteArray(signabc);
 
         //04
         // bdf9699d20b4ebabe76e76260480e5492c87aaeda51b138bd22c6d66b6954931
         // 3dc3eb8c96dc9a1cbbf3b347322c51c05afdd609622277444e0f07e6bd35d8bd
 
-        BigInteger x = new BigInteger("bdf9699d20b4ebabe76e76260480e5492c87aaeda51b138bd22c6d66b6954931",16);
-        BigInteger y = new BigInteger("3dc3eb8c96dc9a1cbbf3b347322c51c05afdd609622277444e0f07e6bd35d8bd",16);
+        BigInteger x = new BigInteger("bdf9699d20b4ebabe76e76260480e5492c87aaeda51b138bd22c6d66b6954931", 16);
+        BigInteger y = new BigInteger("3dc3eb8c96dc9a1cbbf3b347322c51c05afdd609622277444e0f07e6bd35d8bd", 16);
 
         String rs = "5b48861bb8b83e3afd8986c5df0f7034f08db2e921209d77774702b59b16155669b38c490bd4f849a766a35003b7bc21a8b505090b2ae0bb7acbd0c261753611";
 
 //        sig = toByteArray(rs);
-        PublicKey pk =getPublickeyFromXY(x,y);
+        PublicKey pk = getPublickeyFromXY(x, y);
 
 //        enByte = "9487aa1e391b2003ea39e9c5e9e73b62e22adc2c25d1cad691597e8da0f785d3".getBytes();
         boolean bbb = verifySm3WithSm2(enByte, userID, sig, pk);
@@ -463,42 +461,40 @@ public class GmUtil {
         Date date = new Date();
         Long c = date.getTime();
         System.out.println(c);
-        for (int i = 0;i< 1000;i++){
-            verifySm3WithSm2(enByte, userID, sig,pk);
+        for (int i = 0; i < 1000; i++) {
+            verifySm3WithSm2(enByte, userID, sig, pk);
         }
         date = new Date();
-        System.out.println(date.getTime() -c);
-        System.out.println(((float)(date.getTime()-c))/1000.0);
-
+        System.out.println(date.getTime() - c);
+        System.out.println(((float) (date.getTime() - c)) / 1000.0);
 
 
         byte[] signabc2 = signSm3WithSm2(enByte, userID, privateKey);
         System.out.println(Numeric.toHexStringNoPrefix(signabc2));
 
-        sig =(signabc2);
-        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x,y));
+        sig = (signabc2);
+        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x, y));
         System.out.println(bbb);
 
-        byte[] signabc3 = Sm2Util.sign(new ECPrivateKeyParameters(privD, ecDomainParameters),
-                userID, enByte);
-        System.out.println(Numeric.toHexStringNoPrefix(rsAsn1ToPlainByteArray(signabc3)));
+//        byte[] signabc3 = Sm2Util.sign(new ECPrivateKeyParameters(privD, ecDomainParameters),
+//                userID, enByte);
+//        System.out.println(Numeric.toHexStringNoPrefix(rsAsn1ToPlainByteArray(signabc3)));
+//
+//        Sm2PrivateKey sm2PrivateKey = new Sm2PrivateKeyImpl(privateKey);
+//        sm2PrivateKey.setWithId(userID);
+//
+//        sig = rsAsn1ToPlainByteArray(signabc3);
+//        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x, y));
+//        System.out.println(bbb);
+//
+//
+//        byte[] signabc4 = Sm2Util.sign(sm2PrivateKey, enByte);
+//        System.out.println(Numeric.toHexStringNoPrefix(rsAsn1ToPlainByteArray(signabc4)));
 
-        Sm2PrivateKey sm2PrivateKey = new Sm2PrivateKeyImpl(privateKey);
-        sm2PrivateKey.setWithId(userID);
-
-        sig =rsAsn1ToPlainByteArray(signabc3);
-        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x,y));
-        System.out.println(bbb);
-
-
-        byte[] signabc4 = Sm2Util.sign(sm2PrivateKey, enByte);
-        System.out.println(Numeric.toHexStringNoPrefix(rsAsn1ToPlainByteArray(signabc4)));
-
-        sig =rsAsn1ToPlainByteArray(signabc4);
-        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x,y));
-        System.out.println(bbb);
-
-
+//        sig = rsAsn1ToPlainByteArray(signabc4);
+//        bbb = verifySm3WithSm2(enByte, userID, sig, getPublickeyFromXY(x, y));
+//        System.out.println(bbb);
+//
 
 //        byte[] encPub = Base64.getDecoder().decode("MFkwEwYHKoZIzj0CAQYIKoEcz1UBgi0DQgAESic24soUECzuSh2aYH0e+hQYh+/I01NmfjOnm5mwyUEYQvNCPTzn3BlNyufgMV+DWLUKV+2h0+PVel9jYTfG8Q==");
 //        byte[] encPriv = Base64.getDecoder().decode("MIGTAgEAMBMGByqGSM49AgEGCCqBHM9VAYItBHkwdwIBAQQg0dYU+I6IdiSe8bvWlsHuWfsjSn3XFZqOGWO3K1814O6gCgYIKoEcz1UBgi2hRANCAARKJzbiyhQQLO5KHZpgfR76FBiH78jTU2Z+M6ebmbDJQRhC80I9POfcGU3K5+AxX4NYtQpX7aHT49V6X2NhN8bx");

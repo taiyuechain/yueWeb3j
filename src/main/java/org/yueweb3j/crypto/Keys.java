@@ -112,7 +112,9 @@ public class Keys {
         if (Constant.EncryptionMode == 0) {
             hash = Hash.sha3(publicKeyNoPrefix);
         }else {
+            System.out.println(publicKeyNoPrefix);
             hash = GmUtil.sm3(publicKeyNoPrefix);
+            System.out.println(hash);
         }
 
         return hash.substring(hash.length() - ADDRESS_LENGTH_IN_HEX); // right most 160 bits
