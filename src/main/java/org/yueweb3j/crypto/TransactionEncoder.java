@@ -46,7 +46,6 @@ public class TransactionEncoder {
         byte[] encodedTransaction = encode(rawTransaction, chainId);
         Sign.SignatureData signatureData =
                 Sign.signMessage(encodedTransaction, credentials.getEcKeyPair());
-
         Sign.SignatureData eip155SignatureData = createEip155SignatureData(signatureData, chainId);
         return encode(rawTransaction, eip155SignatureData);
     }
@@ -64,7 +63,7 @@ public class TransactionEncoder {
         v = v.add(BigInteger.valueOf(chainId * 2));
         v = v.add(BigInteger.valueOf(CHAIN_ID_INC));
 
-        return new Sign.SignatureData(v.toByteArray(), signatureData.getR(), signatureData.getS());
+        return new Sign.SignatureData(v.toByteArray(), signatureData.getR(), signatureData.getS(), signatureData.getP());
     }
 
     @Deprecated
@@ -133,7 +132,7 @@ public class TransactionEncoder {
         if (signatureData != null) {
             if (signatureData.getP() != null && signatureData.getP().length > 0) {
                 result.add(RlpString.create(signatureData.getP()));
-            } else {
+            } else if (signatureData.getR().length > 1) {
                 result.add(RlpString.create(""));
             }
             result.add(RlpString.create(Bytes.trimLeadingZeroes(signatureData.getV())));

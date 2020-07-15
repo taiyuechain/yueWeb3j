@@ -143,7 +143,6 @@ public class Sign {
             messageHash = message;
         }
 
-
         byte[] sigRS = GmUtil.signSm3WithSm2Asn1Rs(messageHash, GmUtil.defaultUserId,
                 GmUtil.getPrivatekeyFromD(keyPair.getPrivateKey()));
 
@@ -151,7 +150,7 @@ public class Sign {
 
         byte[] r = GmUtil.bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(0)).getValue());
         byte[] s = GmUtil.bigIntToFixexLengthBytes(ASN1Integer.getInstance(seq.getObjectAt(1)).getValue());
-        byte[] v = new byte[]{(byte) 1};
+        byte[] v = new byte[]{(byte) 28};
 
         return new SignatureData(v, r, s,keyPair.getCompressPublicKey());
     }

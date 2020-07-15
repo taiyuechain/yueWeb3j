@@ -22,8 +22,6 @@ import org.bouncycastle.jce.spec.ECParameterSpec;
 import org.bouncycastle.jce.spec.ECPrivateKeySpec;
 import org.bouncycastle.jce.spec.ECPublicKeySpec;
 import org.bouncycastle.util.encoders.Hex;
-import org.yueweb3j.YueWeb3j;
-import org.yueweb3j.crypto.Credentials;
 import org.yueweb3j.utils.Numeric;
 
 import javax.crypto.Cipher;
@@ -69,9 +67,9 @@ public class GmUtil {
     public static byte[] defaultUserId = "1234567812345678".getBytes();
 
     /**
-     * @param msg
-     * @param userId
-     * @param privateKey
+     * @param msg        消息
+     * @param userId     用户id
+     * @param privateKey 私钥
      * @return r||s，直接拼接byte数组的rs
      */
     public static byte[] signSm3WithSm2(byte[] msg, byte[] userId, PrivateKey privateKey) {
@@ -79,9 +77,9 @@ public class GmUtil {
     }
 
     /**
-     * @param msg
-     * @param userId
-     * @param privateKey
+     * @param msg        消息
+     * @param userId     用户id
+     * @param privateKey 私钥
      * @return rs in <b>asn1 format</b>
      */
     public static byte[] signSm3WithSm2Asn1Rs(byte[] msg, byte[] userId, PrivateKey privateKey) {
@@ -99,22 +97,22 @@ public class GmUtil {
     }
 
     /**
-     * @param msg
-     * @param userId
+     * @param msg       消息
+     * @param userId    用户id
      * @param rs        r||s，直接拼接byte数组的rs
-     * @param publicKey
-     * @return
+     * @param publicKey 公钥
+     * @return 结果
      */
     public static boolean verifySm3WithSm2(byte[] msg, byte[] userId, byte[] rs, PublicKey publicKey) {
         return verifySm3WithSm2Asn1Rs(msg, userId, rsPlainByteArrayToAsn1(rs), publicKey);
     }
 
     /**
-     * @param msg
-     * @param userId
+     * @param msg       消息
+     * @param userId    用户id
      * @param rs        in <b>asn1 format</b>
-     * @param publicKey
-     * @return
+     * @param publicKey 公钥
+     * @return 结果
      */
     public static boolean verifySm3WithSm2Asn1Rs(byte[] msg, byte[] userId, byte[] rs, PublicKey publicKey) {
         try {
@@ -132,8 +130,8 @@ public class GmUtil {
     /**
      * bc加解密使用旧标c1||c2||c3，此方法在加密后调用，将结果转化为c1||c3||c2
      *
-     * @param c1c2c3
-     * @return
+     * @param c1c2c3 c1||c2||c3
+     * @return c1||c3||c2
      */
     private static byte[] changeC1C2C3ToC1C3C2(byte[] c1c2c3) {
         //sm2p256v1的这个固定65。可看GMNamedCurves、ECCurve代码。
@@ -154,8 +152,8 @@ public class GmUtil {
     /**
      * bc加解密使用旧标c1||c3||c2，此方法在解密前调用，将密文转化为c1||c2||c3再去解密
      *
-     * @param c1c3c2
-     * @return
+     * @param c1c3c2 c1||c3||c2
+     * @return c1||c2||c3
      */
     private static byte[] changeC1C3C2ToC1C2C3(byte[] c1c3c2) {
         //sm2p256v1的这个固定65。可看GMNamedCurves、ECCurve代码。
@@ -175,9 +173,9 @@ public class GmUtil {
     /**
      * c1||c3||c2
      *
-     * @param data
-     * @param key
-     * @return
+     * @param data 数据
+     * @param key  私钥
+     * @return 加密结果
      */
     public static byte[] sm2Decrypt(byte[] data, PrivateKey key) {
         return sm2DecryptOld(changeC1C3C2ToC1C2C3(data), key);
@@ -186,9 +184,9 @@ public class GmUtil {
     /**
      * c1||c3||c2
      *
-     * @param data
-     * @param key
-     * @return
+     * @param data 数据
+     * @param key  私钥
+     * @return 加密结果
      */
 
     public static byte[] sm2Encrypt(byte[] data, PublicKey key) {
@@ -198,9 +196,9 @@ public class GmUtil {
     /**
      * c1||c2||c3
      *
-     * @param data
-     * @param key
-     * @return
+     * @param data 数据
+     * @param key  私钥
+     * @return 加密结果
      */
     public static byte[] sm2EncryptOld(byte[] data, PublicKey key) {
         BCECPublicKey localECPublicKey = (BCECPublicKey) key;
@@ -217,9 +215,9 @@ public class GmUtil {
     /**
      * c1||c2||c3
      *
-     * @param data
-     * @param key
-     * @return
+     * @param data 数据
+     * @param key  私钥
+     * @return 加密结果
      */
     public static byte[] sm2DecryptOld(byte[] data, PrivateKey key) {
         BCECPrivateKey localECPrivateKey = (BCECPrivateKey) key;
@@ -272,8 +270,8 @@ public class GmUtil {
     }
 
     /**
-     * @param bytes
-     * @return
+     * @param bytes 数据
+     * @return sm3hash
      */
     public static byte[] sm3(byte[] bytes) {
         SM3Digest sm3 = new SM3Digest();
@@ -427,15 +425,15 @@ public class GmUtil {
         BCECPrivateKey privateKey = getPrivatekeyFromD(Numeric.toBigInt("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75"));
 
 
-        YueWeb3j.init(0);
-        Credentials credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
-        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
-        System.out.println(credentials.getAddress());
-
-        YueWeb3j.init(1);
-        credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
-        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
-        System.out.println(credentials.getAddress());
+//        YueWeb3j.init(0);
+//        Credentials credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
+//        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
+//        System.out.println(credentials.getAddress());
+//
+//        YueWeb3j.init(1);
+//        credentials = Credentials.create("7631a11e9d28563cdbcf96d581e4b9a19e53ad433a53c25a9f18c74ddf492f75");
+//        System.out.println(Numeric.toHexStringNoPrefix(credentials.getEcKeyPair().getPublicKey()));
+//        System.out.println(credentials.getAddress());
 
 
         byte[] signabc = signSm3WithSm2Asn1Rs(enByte, userID, privateKey);
@@ -454,6 +452,17 @@ public class GmUtil {
 
 //        sig = toByteArray(rs);
         PublicKey pk = getPublickeyFromXY(x, y);
+
+//
+//        e60b843b9aca0082520894011791e0af9c732ae3e972e18df6f3e012987d03010080824b8f8080
+//                cb2a60fc99e9a71aea8aa247e4d473e45e84c7d88f6adbe4f5d8c5722ff4c52d
+//        a2979d5ff42084558454a4da826f52d6c02cadc98734d02ac827c3b631cf6858
+//        2cf6a7a7fe097bd08a8522a354fc16f18494c5b90c97ef121be861dae7afe81d
+
+
+        enByte = Numeric.hexStringToByteArray("948adf09acffe418c6d6482c379c2b9dc4d95ccca18072afc5ca73517382bffd");
+        sig = Numeric.hexStringToByteArray("f63c70c65faba5c330e3e67959fe022c91f415dad3656d034d0ff46222aef1ac43a8705fd8cfed9528272d0ef68958532050d0ab871365560a2803515c7299de");
+
 
 //        enByte = "9487aa1e391b2003ea39e9c5e9e73b62e22adc2c25d1cad691597e8da0f785d3".getBytes();
         boolean bbb = verifySm3WithSm2(enByte, userID, sig, pk);

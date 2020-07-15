@@ -4,10 +4,7 @@ import org.yueweb3j.crypto.Sign;
 import org.yueweb3j.protocol.Web3j;
 import org.yueweb3j.protocol.http.HttpService;
 
-/**
- * @Author: OTTO
- * @Date: 2020-07-13 18:05
- */
+
 public class YueWeb3j {
     /**
      *
@@ -38,4 +35,5 @@ public class YueWeb3j {
     public static Web3j init(String host){
         return Web3j.build(new HttpService(host));
     }
+
 }

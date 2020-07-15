@@ -22,10 +22,13 @@ public class SystemConstantFunctionEncoder {
             return new Bool((Boolean) o);
         } else if (o instanceof BigInteger) {
             return new Uint256((BigInteger) o);
+        } else if (o instanceof Integer) {
+            return new Uint256((Integer) o);
         }
         return null;
     }
-    private static Type getInputParamsRealString(String s){
+
+    private static Type getInputParamsRealString(String s) {
         return new Utf8String(s);
     }
 
@@ -36,7 +39,7 @@ public class SystemConstantFunctionEncoder {
         } else if (o instanceof Bool) {
             return new TypeReference<Bool>() {
             };
-        }else if (o instanceof String){
+        } else if (o instanceof String) {
             return new TypeReference<Utf8String>() {
             };
         }
@@ -78,34 +81,36 @@ public class SystemConstantFunctionEncoder {
 
     /**
      * 获取组创建function
+     *
      * @param groupName 组名字
      * @return 编码后的function
      */
-    public static String getCreateGroupPermission(String groupName){
-        String functionName ="createGroupPermission";
+    public static String getCreateGroupPermission(String groupName) {
+        String functionName = "createGroupPermission";
         List<Type> inputParameters = new ArrayList<>();
         inputParameters.add(getInputParamsRealString(groupName));
         List<TypeReference<?>> outputParameters = new ArrayList<>();
         outputParameters.add(getOutputParams("1"));
-        return makeFunction(functionName,inputParameters,outputParameters);
+        return makeFunction(functionName, inputParameters, outputParameters);
     }
 
     /**
      * 获取组删除function
+     *
      * @param groupAddress 组名字
      * @return 编码后的function
      */
-    public static String getDelGroupPermission(String groupAddress){
-        String functionName ="delGroupPermission";
+    public static String getDelGroupPermission(String groupAddress) {
+        String functionName = "delGroupPermission";
         List<Type> inputParameters = new ArrayList<>();
         inputParameters.add(getInputParamsRealString(groupAddress));
-        return makeFunction(functionName,inputParameters);
+        return makeFunction(functionName, inputParameters);
     }
 
     /**
      * 权限
      *
-     * @param name  合约方法
+     * @param name            合约方法
      * @param contractAddr    合约地址
      * @param memberAddr      成员地址
      * @param groupAddr       组地址
@@ -248,26 +253,26 @@ public class SystemConstantFunctionEncoder {
     }
 
 
-
     /**
      * 获取添加组管理权限function
      *
-     * @param member 成员
+     * @param member       成员
      * @param groupAddress 组地址
      * @return 编码后的function
      */
-    public static String getAddGropManagerPerm(String member,String groupAddress) {
+    public static String getAddGropManagerPerm(String member, String groupAddress) {
         return getAddGrantPermission(null, member, groupAddress,
                 Constant.ModifyPermissionType.ModifyPerminType_AddGropManagerPerm.ordinal());
     }
 
     /**
-     *  获取删除组管理权限function
-     * @param member 成员
+     * 获取删除组管理权限function
+     *
+     * @param member       成员
      * @param groupAddress 组地址
      * @return 编码后的function
      */
-    public static String getDelCrtContractPerm(String member,String groupAddress) {
+    public static String getDelCrtContractPerm(String member, String groupAddress) {
         return getRemoveGrantPermission(null, member, groupAddress,
                 Constant.ModifyPermissionType.ModifyPerminType_DelGropManagerPerm.ordinal());
     }
@@ -275,11 +280,11 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取添加组成员权限
      *
-     * @param member 成员
+     * @param member       成员
      * @param groupAddress 组地址
      * @return 编码后的function
      */
-    public static String getAddGropMemberPerm(String member,String groupAddress) {
+    public static String getAddGropMemberPerm(String member, String groupAddress) {
         return getAddGrantPermission(null, member, groupAddress,
                 Constant.ModifyPermissionType.ModifyPerminType_AddGropMemberPerm.ordinal());
     }
@@ -287,12 +292,12 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取删除合约管理权限function
      *
-     * @param member 成员
+     * @param member       成员
      * @param groupAddress 组地址
      * @return 编码后的function
      */
-    public static String getDelGropMemberPerm(String member,String groupAddress) {
-        return getRemoveGrantPermission(null,member, groupAddress,
+    public static String getDelGropMemberPerm(String member, String groupAddress) {
+        return getRemoveGrantPermission(null, member, groupAddress,
                 Constant.ModifyPermissionType.ModifyPerminType_DelGropMemberPerm.ordinal());
     }
 
@@ -300,11 +305,11 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取添加合约成员权限function
      *
-     * @param member 成员
+     * @param member          成员
      * @param contractAddress 组地址
      * @return 编码后的function
      */
-    public static String getAddContractMemberPerm(String member,String contractAddress) {
+    public static String getAddContractMemberPerm(String member, String contractAddress) {
         return getAddGrantPermission(contractAddress, member, null,
                 Constant.ModifyPermissionType.ModifyPerminType_AddContractMemberPerm.ordinal());
     }
@@ -312,11 +317,11 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取删除合约成员权限function
      *
-     * @param member 成员
+     * @param member          成员
      * @param contractAddress 组地址
      * @return 编码后的function
      */
-    public static String getDelContractMemberPerm(String member,String contractAddress) {
+    public static String getDelContractMemberPerm(String member, String contractAddress) {
         return getRemoveGrantPermission(contractAddress, member, null,
                 Constant.ModifyPermissionType.ModifyPerminType_DelContractMemberPerm.ordinal());
     }
@@ -324,11 +329,11 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取添加组成员管理权限
      *
-     * @param member 成员
+     * @param member          成员
      * @param contractAddress 组地址
      * @return 编码后的function
      */
-    public static String getAddContractManagerPerm(String member,String contractAddress) {
+    public static String getAddContractManagerPerm(String member, String contractAddress) {
         return getAddGrantPermission(contractAddress, member, null,
                 Constant.ModifyPermissionType.ModifyPerminType_AddContractManagerPerm.ordinal());
     }
@@ -336,13 +341,12 @@ public class SystemConstantFunctionEncoder {
     /**
      * 获取删除组成员管理权限
      *
-     * @param member 成员
+     * @param member          成员
      * @param contractAddress 组地址
      * @return 编码后的function
-     *
      */
-    public static String getDelContractManagerPerm(String member,String contractAddress){
-        return getRemoveGrantPermission(contractAddress,member, null,
+    public static String getDelContractManagerPerm(String member, String contractAddress) {
+        return getRemoveGrantPermission(contractAddress, member, null,
                 Constant.ModifyPermissionType.ModifyPerminType_DelContractManagerPerm.ordinal());
     }
 
