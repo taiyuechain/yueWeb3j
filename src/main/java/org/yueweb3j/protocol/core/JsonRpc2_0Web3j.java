@@ -599,7 +599,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YuePermissionMembers> getListPermission(String groupAddress, int type) {
         return new Request<>(
                 "cpm_listBasePermission",
-                Arrays.asList(groupAddress, type),
+                Arrays.asList("latest", groupAddress, type),
                 web3jService,
                 YuePermissionMembers.class);
     }
@@ -608,7 +608,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YueMemberAddress> showWhiteList() {
         return new Request<>(
                 "cpm_showWhiteList",
-                Collections.<String>emptyList(),
+                Arrays.asList("latest"),
                 web3jService,
                 YueMemberAddress.class);
     }
@@ -617,7 +617,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YueMemberAddress> showBlackList() {
         return new Request<>(
                 "cpm_showBlackList",
-                Collections.<String>emptyList(),
+                Arrays.asList("latest"),
                 web3jService,
                 YueMemberAddress.class);
     }
@@ -626,7 +626,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YueMemberAddress> showMyGroup() {
         return new Request<>(
                 "cpm_showMyGroup",
-                Collections.<String>emptyList(),
+                Arrays.asList("latest"),
                 web3jService,
                 YueMemberAddress.class);
     }
@@ -635,7 +635,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YuePermissionGroup> showGroup(String address) {
         return new Request<>(
                 "cpm_showGroup",
-                Collections.singletonList(address),
+                Arrays.asList("latest",address),
                 web3jService,
                 YuePermissionGroup.class);
     }
@@ -644,7 +644,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YueBasePermission> getListBasePermission(String address) {
         return new Request<>(
                 "cpm_listBasePermission",
-                Collections.singletonList(address),
+                Arrays.asList("latest",address),
                 web3jService,
                 YueBasePermission.class);
     }
