@@ -23,6 +23,7 @@ import org.yueweb3j.abi.datatypes.Function;
 import org.yueweb3j.abi.datatypes.Type;
 import org.yueweb3j.abi.spi.FunctionEncoderProvider;
 import org.yueweb3j.crypto.Hash;
+import org.yueweb3j.crypto.sm.GmUtil;
 import org.yueweb3j.utils.Numeric;
 
 import static org.yueweb3j.abi.TypeDecoder.instantiateType;
@@ -88,7 +89,7 @@ public abstract class FunctionEncoder {
 
     protected static String buildMethodId(final String methodSignature) {
         final byte[] input = methodSignature.getBytes();
-        final byte[] hash = Hash.sha3(input);
+        final byte[] hash = GmUtil.sm3(input);
         return Numeric.toHexString(hash).substring(0, 10);
     }
 

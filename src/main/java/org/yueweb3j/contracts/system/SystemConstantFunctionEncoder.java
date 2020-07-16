@@ -40,6 +40,11 @@ public class SystemConstantFunctionEncoder {
             return new TypeReference<Bool>() {
             };
         } else if (o instanceof String) {
+            String s = (String)o;
+            if(s.equals("a")){
+                return new TypeReference<Address>() {
+                };
+            }
             return new TypeReference<Utf8String>() {
             };
         }
@@ -93,6 +98,7 @@ public class SystemConstantFunctionEncoder {
         outputParameters.add(getOutputParams("1"));
         return makeFunction(functionName, inputParameters, outputParameters);
     }
+
 
     /**
      * 获取组删除function
