@@ -3,22 +3,23 @@ package org.yueweb3j.protocol.core.methods.response;
 import org.yueweb3j.protocol.core.Response;
 
 import java.util.List;
+import java.util.Map;
 
 
-public class YuePermissionMembers extends Response<List<YueMemberAddress>> {
-    public List<String> getWhileMembers() {
-        return getResult().get(0).getMember();
+public class YuePermissionMembers extends Response<Map<String, List<String>>> {
+    public List<String> getWhiteMembers() {
+        return getResult().get("WhiteMembers");
     }
 
-    public List<String> getWhileWhiteManager() {
-        return getResult().get(1).getMember();
+    public List<String> getWhiteManager() {
+        return getResult().get("WhiteManager");
     }
 
     public List<String> getBlackMembers() {
-        return getResult().get(2).getMember();
+        return getResult().get("BlackMembers");
     }
 
     public List<String> getBlackManager() {
-        return getResult().get(3).getMember();
+        return getResult().get("BlackManager");
     }
 }

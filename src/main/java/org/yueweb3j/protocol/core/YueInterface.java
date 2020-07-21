@@ -170,7 +170,7 @@ public interface YueInterface {
 
     Request<?, YueMemberAddress> showBlackList();
 
-    Request<?, YueMemberAddress> showMyGroup();
+    Request<?, YueMemberAddress> showMyGroup(String address);
 
     Request<?, YuePermissionGroup> showGroup(String address);
 

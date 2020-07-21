@@ -20,7 +20,7 @@ public class Constant {
     /**
      * 零地址
      */
-    public static String AddressZero = "0x0";
+    public static String AddressZero = "0x0000000000000000000000000000000000000000";
 
     /**
      * 合约权限修改的ID

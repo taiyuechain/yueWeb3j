@@ -2,18 +2,23 @@ package org.yueweb3j.protocol.core.methods.response.permission;
 
 import org.yueweb3j.protocol.core.methods.response.YueMemberAddress;
 
+import java.security.Permission;
+import java.util.List;
+
 public class PermissionGroup {
     private String groupKey;
     private String creator;
     private String id;
     private String name;
-    private YueMemberAddress whiteMembers;
-    private YueMemberAddress whiteManager;
-    private YueMemberAddress blackMembers;
-    private YueMemberAddress blackManager;
+    private List<String> whiteMembers;
+    private List<String> whiteManager;
+    private List<String> blackMembers;
+    private List<String> blackManager;
+    public PermissionGroup(){
 
-    public PermissionGroup(String groupKey, String creator, String id, String name, YueMemberAddress whiteMembers,
-                           YueMemberAddress whiteManager, YueMemberAddress blackMembers, YueMemberAddress blackManager) {
+    }
+    public PermissionGroup(String groupKey, String creator, String id, String name, List<String> whiteMembers,
+                           List<String> whiteManager, List<String> blackMembers, List<String> blackManager) {
         this.groupKey = groupKey;
         this.creator = creator;
         this.id = id;
@@ -56,35 +61,35 @@ public class PermissionGroup {
         this.name = name;
     }
 
-    public YueMemberAddress getWhiteMembers() {
+    public List<String> getWhiteMembers() {
         return whiteMembers;
     }
 
-    public void setWhiteMembers(YueMemberAddress whiteMembers) {
+    public void setWhiteMembers(List<String> whiteMembers) {
         this.whiteMembers = whiteMembers;
     }
 
-    public YueMemberAddress getWhiteManager() {
+    public List<String> getWhiteManager() {
         return whiteManager;
     }
 
-    public void setWhiteManager(YueMemberAddress whiteManager) {
+    public void setWhiteManager(List<String> whiteManager) {
         this.whiteManager = whiteManager;
     }
 
-    public YueMemberAddress getBlackMembers() {
+    public List<String> getBlackMembers() {
         return blackMembers;
     }
 
-    public void setBlackMembers(YueMemberAddress blackMembers) {
+    public void setBlackMembers(List<String> blackMembers) {
         this.blackMembers = blackMembers;
     }
 
-    public YueMemberAddress getBlackManager() {
+    public List<String> getBlackManager() {
         return blackManager;
     }
 
-    public void setBlackManager(YueMemberAddress blackManager) {
+    public void setBlackManager(List<String> blackManager) {
         this.blackManager = blackManager;
     }
 

@@ -598,8 +598,8 @@ public class JsonRpc2_0Web3j implements Web3j {
     @Override
     public Request<?, YuePermissionMembers> getListPermission(String groupAddress, int type) {
         return new Request<>(
-                "cpm_listBasePermission",
-                Arrays.asList("latest", groupAddress, type),
+                "cpm_listPermission",
+                Arrays.asList(groupAddress, type,"latest"),
                 web3jService,
                 YuePermissionMembers.class);
     }
@@ -623,10 +623,10 @@ public class JsonRpc2_0Web3j implements Web3j {
     }
 
     @Override
-    public Request<?, YueMemberAddress> showMyGroup() {
+    public Request<?, YueMemberAddress> showMyGroup(String address) {
         return new Request<>(
                 "cpm_showMyGroup",
-                Arrays.asList("latest"),
+                Arrays.asList(address,"latest"),
                 web3jService,
                 YueMemberAddress.class);
     }
@@ -635,7 +635,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YuePermissionGroup> showGroup(String address) {
         return new Request<>(
                 "cpm_showGroup",
-                Arrays.asList("latest",address),
+                Arrays.asList(address,"latest"),
                 web3jService,
                 YuePermissionGroup.class);
     }
@@ -644,7 +644,7 @@ public class JsonRpc2_0Web3j implements Web3j {
     public Request<?, YueBasePermission> getListBasePermission(String address) {
         return new Request<>(
                 "cpm_listBasePermission",
-                Arrays.asList("latest",address),
+                Arrays.asList(address,"latest"),
                 web3jService,
                 YueBasePermission.class);
     }

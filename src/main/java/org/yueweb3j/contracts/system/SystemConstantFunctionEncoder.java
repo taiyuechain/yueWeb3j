@@ -221,7 +221,7 @@ public class SystemConstantFunctionEncoder {
      * @return 编码后的function
      */
     public static String getAddCrtContractPerm(String memberOrGroupAddress) {
-        return getRemoveGrantPermission(null, memberOrGroupAddress, null,
+        return getAddGrantPermission(null, memberOrGroupAddress, null,
                 Constant.ModifyPermissionType.ModifyPerminType_AddCrtContractPerm.ordinal());
     }
 
@@ -269,6 +269,18 @@ public class SystemConstantFunctionEncoder {
     public static String getAddGropManagerPerm(String member, String groupAddress) {
         return getAddGrantPermission(null, member, groupAddress,
                 Constant.ModifyPermissionType.ModifyPerminType_AddGropManagerPerm.ordinal());
+    }
+
+    /**
+     * 获取删除组管理权限function
+     *
+     * @param member       成员
+     * @param groupAddress 组地址
+     * @return 编码后的function
+     */
+    public static String getDelGropManagerPerm(String member, String groupAddress) {
+        return getRemoveGrantPermission(null, member, groupAddress,
+                Constant.ModifyPermissionType.ModifyPerminType_DelGropManagerPerm.ordinal());
     }
 
     /**
@@ -408,8 +420,8 @@ public class SystemConstantFunctionEncoder {
      * @return 编码后的function
      */
     public static String getCreateContract(String memberOrGroupAddress) {
-        return getRemoveGrantPermission(null, memberOrGroupAddress, null,
-                Constant.ModifyPermissionType.PerminType_CreateContract.ordinal());
+        return getAddGrantPermission(memberOrGroupAddress, null, null,
+                Constant.ModifyPermissionType.ModifyPerminType_CrtContractPerm.ordinal(),true);
     }
 
 
